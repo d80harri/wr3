@@ -5,8 +5,9 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import net.d80harri.wr.ui.core.ServiceProxy;
+import net.d80harri.wr.ui.itemtree.ItemTreeView;
 
 public class AppPresenter implements Initializable {
 
@@ -21,10 +22,10 @@ public class AppPresenter implements Initializable {
 	}
 	
 	@FXML
-	private Label label;
+	private AnchorPane itemTreePane;
 	
 	public void initialize(URL location, ResourceBundle resources) {
-		label.setText("" + serviceProxy.hashCode());
+		itemTreePane.getChildren().add(new ItemTreeView().getView());
 	}
 
 
