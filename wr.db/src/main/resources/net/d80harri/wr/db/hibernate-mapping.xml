@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.d80harri.wr.db.model">
+
+
+	<class name="Item" table="Item">
+		<id name="id" column="id">
+			<generator class="native" />
+		</id>
+		<property name="description" />
+		<property name="title" />
+		<set name="childItems" table="Item" lazy="true">
+			<key>
+				<column name="parent_id" />
+			</key>
+			<one-to-many class="Item" />
+		</set>
+		<set name="itemLists" table="Item2List">
+			<key column="item_id" />
+			<many-to-many column="itemlist_id" class="ItemList" />
+		</set>
+		<many-to-one name="parentItem" column="parent_id" class="Item" lazy="proxy"/>
+	</class>
+
+	<class name="ItemList" table="ItemList">
+		<id name="id" column="id">
+			<generator class="native" />
+		</id>
+		<property name="name" />
+		<many-to-one name="parentList" column="parent_id" />
+		<set name="childLists" table="ItemList" inverse="true" lazy="true">
+			<key>
+				<column name="parent_id" />
+			</key>
+			<one-to-many class="ItemList" />
+		</set>
+	</class>
+
+	<class name="ItemType" table="ItemType">
+		<id name="id" column="id">
+			<generator class="native" />
+		</id>
+		<property name="discriminator" />
+	</class>
+</hibernate-mapping>
