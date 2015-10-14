@@ -22,7 +22,7 @@
 
 
 <AnchorPane id="AnchorPane"
-	styleClass="airpad" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	styleClass="wr" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	prefWidth="1024" prefHeight="768"
 	fx:controller="net.d80harri.wr.ui.AppPresenter">
 	<AnchorPane fx:id="itemTreePane" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" />

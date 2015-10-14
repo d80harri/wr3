@@ -26,7 +26,7 @@
 	AnchorPane.bottomAnchor="0" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter">
 	<center>
-		<TextField fx:id="title"/>
+		<TextField fx:id="title" styleClass="input-label"/>
 	</center>
 	<bottom>
 		<Label fx:id="description" />
