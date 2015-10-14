@@ -105,6 +105,7 @@ public class ItemTreePresenter implements Initializable {
 					}
 
 				});
-		return result;
+		ItemTreeCell cell = new ItemTreeCell();
+		return cell;
 	}
 }
