@@ -1,24 +1,28 @@
 package net.d80harri.wr.ui.itemtree;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class ItemModel {
 	private Integer id;
-	private String title;
-	private String description;
+	private StringProperty title = new SimpleStringProperty();
+	private StringProperty description = new SimpleStringProperty();
 
 	public String getTitle() {
-		return title;
+		return title.get();
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		this.title.set(title);
 	}
 
 	public String getDescription() {
-		return description;
+		return description.get();
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.description.set(description);
 	}
 
 	public Integer getId() {
@@ -27,5 +31,13 @@ public class ItemModel {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Property<String> titleProperty() {
+		return title;
+	}
+
+	public Property<String> descriptionProperty() {
+		return description;
 	}
 }
