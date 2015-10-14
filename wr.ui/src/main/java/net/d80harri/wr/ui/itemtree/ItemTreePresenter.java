@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.util.StringConverter;
+import net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter.ItemTreeCellEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -91,21 +91,13 @@ public class ItemTreePresenter implements Initializable {
 	}
 
 	private TreeCell<ItemModel> createTreeItemCell(TreeView<ItemModel> param) {
-		TextFieldTreeCell<ItemModel> result = new TextFieldTreeCell<>(
-				new StringConverter<ItemModel>() {
-
-					@Override
-					public String toString(ItemModel object) {
-						return object.getTitle();
-					}
-
-					@Override
-					public ItemModel fromString(String string) {
-						throw new RuntimeException("NYI");
-					}
-
-				});
 		ItemTreeCell cell = new ItemTreeCell();
+		cell.addEventHandler(ItemTreeCellPresenter.ItemTreeCellEvent.APPEND_SIBLING_REQUESTED, this::appendSibling);
 		return cell;
+	}
+	
+	private void appendSibling(ItemTreeCellEvent event) {
+		System.out.println(event);
+		System.out.println(event.getRequestSource() + " requests a new sibling");
 	}
 }

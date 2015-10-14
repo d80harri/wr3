@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -21,14 +22,19 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
 
-<BorderPane id="AnchorPane" AnchorPane.leftAnchor="0"
-	AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
-	AnchorPane.bottomAnchor="0" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter">
+<BorderPane id="AnchorPane" AnchorPane.bottomAnchor="0"
+	AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+	AnchorPane.topAnchor="0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter">
 	<center>
-		<TextField fx:id="title" styleClass="input-label"/>
+		<TextField fx:id="title" style="-fx-fon-size:20px"
+			styleClass="input-label">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</TextField>
 	</center>
 	<bottom>
-		<Label fx:id="description" />
+		<TextField fx:id="description" styleClass="input-label" />
 	</bottom>
 </BorderPane>
