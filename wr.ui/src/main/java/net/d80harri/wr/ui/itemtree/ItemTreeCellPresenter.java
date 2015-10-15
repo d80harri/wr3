@@ -4,7 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -38,6 +40,9 @@ public class ItemTreeCellPresenter implements Initializable {
 	}
 
 	@FXML
+	private BooleanProperty detailVisible = new SimpleBooleanProperty(false);
+
+	@FXML
 	private TextField title;
 	@FXML
 	private TextField description;
@@ -67,5 +72,24 @@ public class ItemTreeCellPresenter implements Initializable {
 			title.fireEvent(new ItemTreeCellEvent(
 					ItemTreeCellEvent.APPEND_SIBLING_REQUESTED, model.get()));
 	}
+
+	public void requestFocus() {
+		title.selectAll();
+		title.requestFocus();
+	}
+
+	public final BooleanProperty detailVisibleProperty() {
+		return this.detailVisible;
+	}
+
+	public final boolean isDetailVisible() {
+		return this.detailVisibleProperty().get();
+	}
+
+	public final void setDetailVisible(final boolean detailVisible) {
+		this.detailVisibleProperty().set(detailVisible);
+	}
+	
+	
 
 }

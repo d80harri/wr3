@@ -24,11 +24,11 @@ public class ItemTreePresenter implements Initializable {
 	@Autowired
 	private ServiceProxy serviceProxy;
 	
-	@FXML
-	private TreeView<ItemModel> itemTree;
-
 	@Autowired
 	private ItemTreePresenterLogic logic;
+	
+	@FXML
+	private TreeView<ItemModel> itemTree;
 
 	private Optional<TreeItem<ItemModel>> rootItem = Optional.empty();
 
@@ -43,7 +43,6 @@ public class ItemTreePresenter implements Initializable {
 	}
 
 	private TreeItem<ItemModel> createNode(ItemModel item) {
-
 		return new TreeItem<ItemModel>(item) {
 			private boolean isLeaf;
 			private boolean isFirstTimeChildren = true;
@@ -99,9 +98,14 @@ public class ItemTreePresenter implements Initializable {
 	}
 	
 	private void appendSibling(ItemTreeCellEvent event) {
+		System.out.println("Appending sibling requested for " + event.getRequestSource().getTitle());
 		ItemModel newItem = new ItemModel();
-		itemTree.getFocusModel().getFocusedItem().getParent().getChildren().add(new TreeItem<ItemModel>(newItem));
-		itemTree.getFocusModel().focusNext();
+		TreeItem<ItemModel> item = new TreeItem<ItemModel>(newItem);
+		
+		ItemTreeCell cell = (ItemTreeCell) event.getSource();
+		cell.getTreeItem().getParent().getChildren().add(item);
+		itemTree.getSelectionModel().select(item);
+		
 		itemTree.layout();
 		itemTree.edit(itemTree.getFocusModel().getFocusedItem());
 	}

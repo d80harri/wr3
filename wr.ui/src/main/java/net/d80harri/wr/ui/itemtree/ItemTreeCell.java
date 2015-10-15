@@ -6,6 +6,9 @@ import javafx.scene.control.TreeCell;
 
 public class ItemTreeCell extends TreeCell<ItemModel> {
 
+	private ItemTreeCellView view = null;
+	private ItemTreeCellPresenter presenter = null;
+
 	@Override
 	protected void updateItem(ItemModel item, boolean empty) {
 		super.updateItem(item, empty);
@@ -13,17 +16,24 @@ public class ItemTreeCell extends TreeCell<ItemModel> {
 			setText(null);
 			setGraphic(null);
 		} else {
-			ItemTreeCellView view = new ItemTreeCellView();
-			ItemTreeCellPresenter presenter = (ItemTreeCellPresenter) view
-					.getPresenter();
 			setText(null);
+			createView();
 			setGraphic(view.getView());
-			presenter.setModel(Optional.of(item));
+			getPresenter().setModel(Optional.of(item));
 		}
 	}
-	
+
+	public void createView() {
+		this.view = new ItemTreeCellView();
+	}
+
+	public ItemTreeCellPresenter getPresenter() {
+		return (ItemTreeCellPresenter)this.view.getPresenter();
+	}
+
 	@Override
 	public void startEdit() {
-		super.startEdit();		
+		super.startEdit();
+		getPresenter().requestFocus();
 	}
 }
