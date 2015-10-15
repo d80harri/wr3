@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import net.d80harri.wr.ui.core.ServiceProxy;
 import net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter.ItemTreeCellEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ItemTreePresenter implements Initializable {
-
+	@Autowired
+	private ServiceProxy serviceProxy;
+	
 	@FXML
 	private TreeView<ItemModel> itemTree;
 
@@ -97,7 +99,10 @@ public class ItemTreePresenter implements Initializable {
 	}
 	
 	private void appendSibling(ItemTreeCellEvent event) {
-		System.out.println(event);
-		System.out.println(event.getRequestSource() + " requests a new sibling");
+		ItemModel newItem = new ItemModel();
+		itemTree.getFocusModel().getFocusedItem().getParent().getChildren().add(new TreeItem<ItemModel>(newItem));
+		itemTree.getFocusModel().focusNext();
+		itemTree.layout();
+		itemTree.edit(itemTree.getFocusModel().getFocusedItem());
 	}
 }

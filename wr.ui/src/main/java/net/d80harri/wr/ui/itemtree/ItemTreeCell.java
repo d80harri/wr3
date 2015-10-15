@@ -21,4 +21,9 @@ public class ItemTreeCell extends TreeCell<ItemModel> {
 			presenter.setModel(Optional.of(item));
 		}
 	}
+	
+	@Override
+	public void startEdit() {
+		super.startEdit();		
+	}
 }
