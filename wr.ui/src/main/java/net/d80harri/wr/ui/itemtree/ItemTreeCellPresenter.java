@@ -68,6 +68,8 @@ public class ItemTreeCellPresenter implements Initializable {
 	}
 
 	public void keyPressed(KeyEvent evt) {
+		System.out.println("Key pressed for " + title.getText());
+		System.out.println("Key pressed for " + model.get().getTitle());
 		if (evt.getCode() == KeyCode.ENTER)
 			title.fireEvent(new ItemTreeCellEvent(
 					ItemTreeCellEvent.APPEND_SIBLING_REQUESTED, model.get()));
@@ -89,7 +91,5 @@ public class ItemTreeCellPresenter implements Initializable {
 	public final void setDetailVisible(final boolean detailVisible) {
 		this.detailVisibleProperty().set(detailVisible);
 	}
-	
-	
 
 }

@@ -40,4 +40,12 @@ public class ItemModel {
 	public Property<String> descriptionProperty() {
 		return description;
 	}
+
+	@Override
+	public String toString() {
+		return "ItemModel [id=" + id + ", title=" + title + ", description="
+				+ description + "]";
+	}
+	
+	
 }

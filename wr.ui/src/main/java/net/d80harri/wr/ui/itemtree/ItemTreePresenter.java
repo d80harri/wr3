@@ -99,6 +99,7 @@ public class ItemTreePresenter implements Initializable {
 	
 	private void appendSibling(ItemTreeCellEvent event) {
 		System.out.println("Appending sibling requested for " + event.getRequestSource().getTitle());
+
 		ItemModel newItem = new ItemModel();
 		TreeItem<ItemModel> item = new TreeItem<ItemModel>(newItem);
 		

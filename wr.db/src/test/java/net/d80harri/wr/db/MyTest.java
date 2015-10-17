@@ -21,7 +21,7 @@ public class MyTest {
 	private ProviderFactory providerFactory;
 	
 	@Test
-	@Transactional
+//	@Transactional
 	public void myTest() throws ValueProviderException {
 		entityFactory.selectAll(Item.class);
 		
