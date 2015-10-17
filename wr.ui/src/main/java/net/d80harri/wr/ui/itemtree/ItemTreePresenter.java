@@ -14,7 +14,6 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.d80harri.wr.ui.core.ServiceProxy;
-import net.d80harri.wr.ui.itemtree.ItemTreeCellPresenter.ItemTreeCellEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -93,21 +92,7 @@ public class ItemTreePresenter implements Initializable {
 
 	private TreeCell<ItemModel> createTreeItemCell(TreeView<ItemModel> param) {
 		ItemTreeCell cell = new ItemTreeCell();
-		cell.addEventHandler(ItemTreeCellPresenter.ItemTreeCellEvent.APPEND_SIBLING_REQUESTED, this::appendSibling);
 		return cell;
 	}
 	
-	private void appendSibling(ItemTreeCellEvent event) {
-		System.out.println("Appending sibling requested for " + event.getRequestSource().getTitle());
-
-		ItemModel newItem = new ItemModel();
-		TreeItem<ItemModel> item = new TreeItem<ItemModel>(newItem);
-		
-		ItemTreeCell cell = (ItemTreeCell) event.getSource();
-		cell.getTreeItem().getParent().getChildren().add(item);
-		itemTree.getSelectionModel().select(item);
-		
-		itemTree.layout();
-		itemTree.edit(itemTree.getFocusModel().getFocusedItem());
-	}
 }
