@@ -6,6 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<properties>
+		<org.springframework-version>4.2.1.RELEASE</org.springframework-version>
+		<org.hibernate-version>4.3.11.Final</org.hibernate-version>
+	</properties>
+
+
 	<build>
 		<pluginManagement>
 			<plugins>

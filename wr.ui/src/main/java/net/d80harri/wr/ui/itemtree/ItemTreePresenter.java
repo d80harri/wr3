@@ -31,6 +31,10 @@ public class ItemTreePresenter implements Initializable {
 
 	private Optional<TreeItem<ItemModel>> rootItem = Optional.empty();
 
+	public Optional<TreeItem<ItemModel>> getModel() {
+		return this.rootItem;		
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rootItem = Optional.of(createNode(null));

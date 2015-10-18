@@ -28,16 +28,22 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.testfx</groupId>
-			<artifactId>testfx-core</artifactId>
-			<version>4.0.1-alpha</version>
+			<groupId>org.loadui</groupId>
+			<artifactId>testFx</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.testfx</groupId>
-			<artifactId>testfx-junit</artifactId>
-			<version>4.0.1-alpha</version>
-			<scope>test</scope>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.2.0</version>
+			<scope>test</scope> 
 		</dependency>
 	</dependencies>
 </project>
