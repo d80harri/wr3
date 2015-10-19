@@ -3,9 +3,6 @@ package net.d80harri.wr.ui.itemtree;
 import java.util.Optional;
 
 import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 public class ItemTreeCell extends TreeCell<ItemModel> {
 
@@ -21,7 +18,8 @@ public class ItemTreeCell extends TreeCell<ItemModel> {
 			setGraphic(null);
 		} else {
 			setText(null);
-			createView();
+			if (view == null)
+				createView();
 
 			setModel(item);
 			setGraphic(view.getView());
@@ -30,20 +28,7 @@ public class ItemTreeCell extends TreeCell<ItemModel> {
 
 	public void createView() {
 		this.view = new ItemTreeCellView();
-		this.view.getPresenter().title.setOnKeyPressed(this::keyPressed);
-	}
-	public void keyPressed(KeyEvent evt) {
-		if (evt.getCode() == KeyCode.ENTER) {
-			ItemModel newModel = new ItemModel();
-			newModel.setTitle(""+Math.random());
-			TreeItem<ItemModel> item = new TreeItem<ItemModel>(newModel);
-			getTreeItem().getParent().getChildren().add(item);
-			
-//			getTreeView().getSelectionModel().select(item);
-			
-			getTreeView().layout();
-			getTreeView().edit(item);
-		}
+		this.view.getPresenter().setCell(this);
 	}
 
 	private void setModel(ItemModel model) {

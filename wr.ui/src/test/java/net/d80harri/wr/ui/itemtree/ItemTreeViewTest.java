@@ -16,12 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "/net/d80harri/wr/ui/test-application-context.xml" })
 public class ItemTreeViewTest extends GuiTest {
 	private ItemTreeView treeView;
-	private ItemTreeView treeView2;
 
 	@Override
 	protected Parent getRootNode() {
 		this.treeView = new ItemTreeView();
-		treeView2 = new ItemTreeView();
 		return treeView.getView();
 	}
 
@@ -33,6 +31,21 @@ public class ItemTreeViewTest extends GuiTest {
 		fail("Not yet fully implemented");
 	}
 	
-	
+	@Test
+	public void addElementsToTree() {
+		/*
+		 * 1. create a root nodes with one child node
+		 * 2. select the root node and click enter
+		 * 3. a new root node has to be created
+		 * 
+		 * 4. select the child node and click enter
+		 * 5. a new child node has to be created
+		 */
+		
+		/* Remove Scope annotation from ItemTreeCellPresenter (make it singleton)
+		 * to provoke an error
+		 */
+		fail("Not yet fully implemented");
+	}
 
 }
