@@ -1,5 +1,7 @@
 package net.d80harri.wr.ui;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import net.d80harri.wr.ui.AppView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+    	new ClassPathXmlApplicationContext("net/d80harri/wr/ui/application-context.xml");
     	AppView appView = new AppView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("White rabbit v0.0.1");

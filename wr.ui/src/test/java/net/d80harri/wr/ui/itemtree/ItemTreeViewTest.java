@@ -1,14 +1,17 @@
 package net.d80harri.wr.ui.itemtree;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.Optional;
 
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 
-import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.loadui.testfx.GuiTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

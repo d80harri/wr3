@@ -11,10 +11,11 @@
                            http://www.springframework.org/schema/tx
         					http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<bean class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg value="net.d80harri.wr.ui.itemtree.ItemTreePresenterLogic" />
-	</bean>
 
 	<import resource="classpath:/net/d80harri/wr/ui/application-context.xml" />
+	
+	<bean primary="true" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="net.d80harri.wr.ui.itemtree.ItemTreePresenterLogic" />
+	</bean>
 
 </beans>
