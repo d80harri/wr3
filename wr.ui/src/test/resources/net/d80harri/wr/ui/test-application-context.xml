@@ -16,6 +16,9 @@
 	
 	<bean primary="true" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg value="net.d80harri.wr.ui.itemtree.ItemTreePresenterLogic" />
+		<constructor-arg>
+			<bean class="net.d80harri.wr.ui.itemtree.ThrowsUnmockedException"/>
+		</constructor-arg>
 	</bean>
 
 </beans>

@@ -38,6 +38,14 @@ public class ItemTreePresenter implements Initializable {
 		return this.rootItem;		
 	}
 	
+	public ServiceProxy getServiceProxy() {
+		return serviceProxy;
+	}
+	
+	public void setServiceProxy(ServiceProxy serviceProxy) {
+		this.serviceProxy = serviceProxy;
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rootItem = Optional.of(createNode(null));

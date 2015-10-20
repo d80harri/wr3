@@ -11,7 +11,6 @@ import javafx.scene.control.TreeItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.loadui.testfx.GuiTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
