@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ItemTreePresenter implements Initializable {
-	@Autowired
-	private ServiceProxy serviceProxy;
 	
 	@Autowired
 	private ItemTreePresenterLogic logic;
@@ -38,22 +36,16 @@ public class ItemTreePresenter implements Initializable {
 		return this.rootItem;		
 	}
 	
-	public ServiceProxy getServiceProxy() {
-		return serviceProxy;
-	}
-	
-	public void setServiceProxy(ServiceProxy serviceProxy) {
-		this.serviceProxy = serviceProxy;
-	}
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		rootItem = Optional.of(createNode(null));
-
-		itemTree.setRoot(rootItem.get());
 		itemTree.setShowRoot(false);
 		itemTree.setCellFactory(this::createTreeItemCell);
 		itemTree.setEditable(true);
+	}
+	
+	public void reload() {
+		rootItem = Optional.of(createNode(null));
+		itemTree.setRoot(rootItem.get());
 	}
 
 	private TreeItem<ItemModel> createNode(ItemModel item) {

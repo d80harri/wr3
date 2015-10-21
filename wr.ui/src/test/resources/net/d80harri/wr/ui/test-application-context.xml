@@ -15,10 +15,8 @@
 	<import resource="classpath:/net/d80harri/wr/ui/application-context.xml" />
 	
 	<bean primary="true" class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg value="net.d80harri.wr.ui.itemtree.ItemTreePresenterLogic" />
-		<constructor-arg>
-			<bean class="net.d80harri.wr.ui.itemtree.ThrowsUnmockedException"/>
-		</constructor-arg>
+		<constructor-arg value="net.d80harri.wr.ui.core.ServiceProxy" />
+		
 	</bean>
 
 </beans>

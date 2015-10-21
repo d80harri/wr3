@@ -1,5 +1,9 @@
 package net.d80harri.wr.ui.itemtree;
 
+import java.util.function.Consumer;
+
+import com.google.common.base.Supplier;
+
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,6 +13,14 @@ public class ItemModel {
 	private StringProperty title = new SimpleStringProperty();
 	private StringProperty description = new SimpleStringProperty();
 
+	public ItemModel() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ItemModel(Consumer<ItemModel> consumer) {
+		consumer.accept(this);
+	}
+	
 	public String getTitle() {
 		return title.get();
 	}
