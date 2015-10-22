@@ -1,12 +1,16 @@
 package net.d80harri.wr.ui.itemtree2;
 
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import net.d80harri.wr.ui.itemtree2.TreeItemCellView.NewItemRequestedEvent;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.loadui.testfx.GuiTest;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -32,8 +36,12 @@ public class TreeItemCellViewTest extends GuiTest {
 	
 	@Test
 	public void userWantsToAddASiblingItemUsingTheKeyboard() {
-		click(view.getTxtTitle(), MouseButton.PRIMARY).type(KeyCode.ENTER);
+		EventHandler<NewItemRequestedEvent> mockedEvent = Mockito.mock(EventHandler.class);
+		view.addEventHandler(NewItemRequestedEvent.NEXT, mockedEvent);
+		click(view.getTxtTitle(), MouseButton.PRIMARY).type("Some text").type(KeyCode.ENTER);
 		
-		Mockito.verify(presenter, Mockito.times(1)).createSibling();
+		ArgumentCaptor<NewItemRequestedEvent> argument = ArgumentCaptor.forClass(NewItemRequestedEvent.class);
+		Mockito.verify(mockedEvent, Mockito.times(1)).handle(argument.capture());
+		Assertions.assertThat(argument.getValue().getEventType()).isSameAs(NewItemRequestedEvent.NEXT);
 	}
 }

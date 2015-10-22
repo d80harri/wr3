@@ -1,7 +1,10 @@
 package net.d80harri.wr.ui.itemtree2;
 
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
@@ -16,15 +19,36 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	public TextField getTxtTitle() {
 		return txtTitle;
 	}
-	
+
 	private void txtTitle_KeyPressed(KeyEvent evt) {
-		presenter.createSibling();
+		if (evt.getCode() == KeyCode.ENTER) {
+			this.fireEvent(new NewItemRequestedEvent(NewItemRequestedEvent.NEXT));
+		}
 	}
-	
+
 	@Override
 	public void requestFocus() {
 		super.requestFocus();
 		txtTitle.selectAll();
 		txtTitle.requestFocus();
 	}
+
+	public static class NewItemRequestedEvent extends Event {
+		private static final long serialVersionUID = 3699285621625278032L;
+
+		public static final EventType<NewItemRequestedEvent> PARENT = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+				"PARENT");
+		public static final EventType<NewItemRequestedEvent> NEXT = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+				"NEXT");
+		public static final EventType<NewItemRequestedEvent> PREV = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+				"PREV");
+		public static final EventType<NewItemRequestedEvent> CHILD = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+				"CHILD");
+
+		public NewItemRequestedEvent(EventType<? extends Event> eventType) {
+			super(eventType);
+		}
+
+	}
+
 }
