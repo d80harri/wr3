@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import net.d80harri.wr.ui.core.ApplicationContextProvider;
+import net.d80harri.wr.ui.itemtree.ItemTreePresenter;
 import javafx.fxml.FXMLLoader;
 
 public class SpringFxView extends FXMLView {

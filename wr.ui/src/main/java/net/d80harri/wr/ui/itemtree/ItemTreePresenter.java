@@ -36,6 +36,13 @@ public class ItemTreePresenter implements Initializable {
 		return this.rootItem;		
 	}
 	
+	public ItemTreePresenterLogic getLogic() {
+		return logic;
+	}
+	public void setLogic(ItemTreePresenterLogic logic) {
+		this.logic = logic;
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		itemTree.setShowRoot(false);
