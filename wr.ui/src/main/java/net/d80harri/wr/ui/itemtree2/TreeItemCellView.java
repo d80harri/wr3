@@ -36,13 +36,15 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	public static class NewItemRequestedEvent extends Event {
 		private static final long serialVersionUID = 3699285621625278032L;
 
-		public static final EventType<NewItemRequestedEvent> PARENT = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+		public static final EventType<NewItemRequestedEvent> BASE = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+				"BASE");
+		public static final EventType<NewItemRequestedEvent> PARENT = new EventType<TreeItemCellView.NewItemRequestedEvent>(BASE, 
 				"PARENT");
-		public static final EventType<NewItemRequestedEvent> NEXT = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+		public static final EventType<NewItemRequestedEvent> NEXT = new EventType<TreeItemCellView.NewItemRequestedEvent>(BASE, 
 				"NEXT");
-		public static final EventType<NewItemRequestedEvent> PREV = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+		public static final EventType<NewItemRequestedEvent> PREV = new EventType<TreeItemCellView.NewItemRequestedEvent>(BASE, 
 				"PREV");
-		public static final EventType<NewItemRequestedEvent> CHILD = new EventType<TreeItemCellView.NewItemRequestedEvent>(
+		public static final EventType<NewItemRequestedEvent> CHILD = new EventType<TreeItemCellView.NewItemRequestedEvent>(BASE, 
 				"CHILD");
 
 		public NewItemRequestedEvent(EventType<? extends Event> eventType) {
