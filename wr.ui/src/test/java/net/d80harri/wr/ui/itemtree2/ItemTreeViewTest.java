@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
-import net.d80harri.wr.ui.itemtree2.TreeItemCellView.NewItemRequestedEvent;
+import net.d80harri.wr.ui.itemtree2.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -56,8 +56,8 @@ public class ItemTreeViewTest extends GuiTest {
 		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 
-		runLater(() -> newCell.getValue().fireEvent(new NewItemRequestedEvent(
-				NewItemRequestedEvent.NEXT)));
+		runLater(() -> newCell.getValue().fireEvent(new TreeItemCellEvent(
+				TreeItemCellEvent.CREATE_AFTER)));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
 	}
 

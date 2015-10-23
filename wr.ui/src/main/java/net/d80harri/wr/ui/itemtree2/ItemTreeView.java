@@ -3,7 +3,7 @@ package net.d80harri.wr.ui.itemtree2;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.d80harri.wr.ui.itemtree2.TreeItemCellView.NewItemRequestedEvent;
+import net.d80harri.wr.ui.itemtree2.TreeItemCellView.TreeItemCellEvent;
 
 public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		IItemTreeView {
@@ -28,7 +28,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		TreeItemCellView resultCell = new TreeItemCellView();
 		TreeItem<TreeItemCellView> resultTreeItem = new TreeItem<TreeItemCellView>(
 				resultCell);
-		resultCell.addEventHandler(TreeItemCellView.NewItemRequestedEvent.BASE,
+		resultCell.addEventHandler(TreeItemCellView.TreeItemCellEvent.BASE,
 				this::addNode);
 		parent.getChildren().add(indexOfItem, resultTreeItem);
 		itemTree.layout();
@@ -44,13 +44,15 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		return rootNode;
 	}
 
-	public void addNode(NewItemRequestedEvent event) {
+	public void addNode(TreeItemCellEvent event) {
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		int indexOfItem = item.getParent().getChildren().indexOf(item);
 
-		if (event.getEventType() == NewItemRequestedEvent.NEXT) {
+		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
 			createItemNextTo(item.getParent(), indexOfItem);
+		} else { //if (event.getEventType() == NewItemRequestedEvent.CHILD)
+			createItemNextTo(item, 0);
 		}
 	}
 
