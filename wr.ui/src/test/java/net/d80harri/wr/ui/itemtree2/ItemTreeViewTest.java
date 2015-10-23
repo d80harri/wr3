@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
-import javafx.util.Callback;
+import javafx.scene.control.TreeItem;
 import net.d80harri.wr.ui.itemtree2.TreeItemCellView.NewItemRequestedEvent;
 
 import org.assertj.core.api.Assertions;
@@ -14,7 +14,6 @@ import org.loadui.testfx.GuiTest;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -36,22 +35,32 @@ public class ItemTreeViewTest extends GuiTest {
 	}
 
 	@Test
-	public void createdRootNodeShouldBeSelected() throws InterruptedException {
-		TreeItemCellView cellView = computeLater(() -> view.createRootNode());
-		
-		Assertions.assertThat(cellView.getTxtTitle().isFocused()).isTrue();
+	public void shallCreateNewRootNode() {
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
+
+		Assertions.assertThat(view.getItemTree().getRoot().getChildren())
+					.hasSize(1)
+					.contains(newCell);
 	}
-	
+
+	@Test
+	public void createdRootNodeShouldBeSelected() throws InterruptedException {
+		TreeItem<TreeItemCellView> cellView = computeLater(() -> view.createRootNode());
+
+		Assertions.assertThat(cellView.getValue().getTxtTitle().isFocused()).isTrue();
+	}
+
 	@Test
 	public void shallAddNodeWhenCellRequestsNextSibling() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItemCellView newCell = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
-		
-		runLater(() -> newCell.fireEvent(new NewItemRequestedEvent(NewItemRequestedEvent.NEXT)));
+
+		runLater(() -> newCell.getValue().fireEvent(new NewItemRequestedEvent(
+				NewItemRequestedEvent.NEXT)));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private <T> T computeLater(final Supplier<T> supplier) {
 		Object[] cell = new Object[1];
@@ -74,9 +83,9 @@ public class ItemTreeViewTest extends GuiTest {
 				throw new Error(e);
 			}
 		}
-		return (T)cell[0];
+		return (T) cell[0];
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void runLater(final Runnable callback) {
 		Runnable runable = new Runnable() {

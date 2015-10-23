@@ -19,21 +19,21 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		itemTree.setRoot(rootNode);
 	}
 
-	@Override
-	public TreeItemCellView createRootNode() {
+	public TreeItem<TreeItemCellView> createRootNode() {
 		return createItemNextTo(this.rootNode, rootNode.getChildren().size());
 	}
 
-	public TreeItemCellView createItemNextTo(TreeItem<TreeItemCellView> parent,
-			int indexOfItem) {
-		TreeItemCellView result = new TreeItemCellView();
-		result.addEventHandler(TreeItemCellView.NewItemRequestedEvent.BASE,
+	public TreeItem<TreeItemCellView> createItemNextTo(
+			TreeItem<TreeItemCellView> parent, int indexOfItem) {
+		TreeItemCellView resultCell = new TreeItemCellView();
+		TreeItem<TreeItemCellView> resultTreeItem = new TreeItem<TreeItemCellView>(
+				resultCell);
+		resultCell.addEventHandler(TreeItemCellView.NewItemRequestedEvent.BASE,
 				this::addNode);
-		parent.getChildren().add(indexOfItem,
-				new TreeItem<TreeItemCellView>(result));
+		parent.getChildren().add(indexOfItem, resultTreeItem);
 		itemTree.layout();
-		result.requestFocus();
-		return result;
+		resultCell.requestFocus();
+		return resultTreeItem;
 	}
 
 	public TreeView<TreeItemCellView> getItemTree() {
@@ -60,7 +60,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 
 	private TreeItem<TreeItemCellView> findItem(TreeItem<TreeItemCellView> it,
 			TreeItemCellView item) {
-		if (it.getValue() == item){
+		if (it.getValue() == item) {
 			return it;
 		} else {
 			for (TreeItem<TreeItemCellView> child : it.getChildren()) {

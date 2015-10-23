@@ -1,10 +1,8 @@
 package net.d80harri.wr.ui.itemtree2;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,11 +21,5 @@ public class ItemTreePresenterTest {
 		presenter = new ItemTreePresenter();
 		presenter.setView(view);
 	}
-	
-	@Test
-	public void shallCreateNewRootNode() {
-		presenter.createRootNode();
-		
-		Mockito.verify(view).createRootNode();
-	}
+
 }

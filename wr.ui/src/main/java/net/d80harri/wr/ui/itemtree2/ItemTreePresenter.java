@@ -8,8 +8,4 @@ public class ItemTreePresenter {
 		this.view = view;
 	}
 
-	public TreeItemCellView createRootNode() {
-		return view.createRootNode();
-	}
-
 }
