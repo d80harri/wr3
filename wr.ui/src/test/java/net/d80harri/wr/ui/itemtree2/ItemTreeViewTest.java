@@ -85,33 +85,73 @@ public class ItemTreeViewTest extends GuiTest {
 			public TreeItem<TreeItemCellView> get() {
 				TreeItem<TreeItemCellView> root = view.createRootNode();
 				root.getValue().getTxtTitle().setText("MyRoot");
-				TreeItem<TreeItemCellView> child = view.createItemAt(root, 0);
-				
-				root.getValue().fireEvent(
-						new TreeItemCellEvent(TreeItemCellEvent.EXPAND));
-				
-				return child;
+				return view.createItemAt(root, 0);
 			}
 		});
-		
-		
-		
-		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused()).isTrue();
+
+		runLater(() -> childItem.getParent().getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND)));
+
+		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
+				.isTrue();
 	}
 
 	@Test
 	public void shallFocusNextSibling() {
-		Assertions.fail("NYI");
+		TreeItem<TreeItemCellView> second = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				TreeItem<TreeItemCellView> first = view.createRootNode();
+				first.getValue().getTxtTitle().setText("MyRoot");
+				return view.createRootNode();
+			}
+		});
+
+		runLater(() -> second.previousSibling().getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+
+		Assertions.assertThat(second.getValue().getTxtTitle().isFocused())
+				.isTrue();
 	}
 
 	@Test
 	public void shallFocusParent() {
-		Assertions.fail("NYI");
+		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				TreeItem<TreeItemCellView> root = view.createRootNode();
+				root.getValue().getTxtTitle().setText("MyRoot");
+				return view.createItemAt(root, 0);
+			}
+		});
+
+		runLater(() -> childItem.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.MOVE_TO_PARENT)));
+
+		Assertions.assertThat(
+				childItem.getParent().getValue().getTxtTitle().isFocused())
+				.isTrue();
 	}
 
 	@Test
 	public void shallFocusPreviousSibling() {
-		Assertions.fail("NYI");
+		TreeItem<TreeItemCellView> secondItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				TreeItem<TreeItemCellView> first = view.createRootNode();
+				first.getValue().getTxtTitle().setText("MyRoot");
+				return view.createRootNode();
+			}
+		});
+
+		runLater(() -> secondItem.getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+
+		Assertions.assertThat(secondItem.previousSibling().getValue().getTxtTitle().isFocused())
+				.isTrue();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -122,8 +162,11 @@ public class ItemTreeViewTest extends GuiTest {
 			@Override
 			public void run() {
 				synchronized (this) {
-					cell[0] = supplier.get();
-					notify();
+					try {
+						cell[0] = supplier.get();
+					} finally {
+						notify();
+					}
 				}
 			}
 		};
@@ -139,15 +182,17 @@ public class ItemTreeViewTest extends GuiTest {
 		return (T) cell[0];
 	}
 
-	@SuppressWarnings("unchecked")
 	private void runLater(final Runnable callback) {
 		Runnable runable = new Runnable() {
 
 			@Override
 			public void run() {
 				synchronized (this) {
-					callback.run();
-					notify();
+					try {
+						callback.run();
+					} finally {
+						notify();
+					}
 				}
 			}
 		};

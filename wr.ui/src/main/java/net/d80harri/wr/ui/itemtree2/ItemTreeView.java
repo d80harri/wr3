@@ -45,6 +45,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	}
 
 	private void addNode(TreeItemCellEvent event) {
+		System.out.println("received");
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		int indexOfItem = item.getParent().getChildren().indexOf(item);
@@ -57,7 +58,6 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 			if (item.getChildren().size() > 0){
 				item.expandedProperty().set(true);
 				item.getChildren().get(0).getValue().requestFocus();
-				this.layout();
 			}
 		}
 	}
