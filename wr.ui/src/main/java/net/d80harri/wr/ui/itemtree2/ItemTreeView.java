@@ -20,10 +20,10 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	}
 
 	public TreeItem<TreeItemCellView> createRootNode() {
-		return createItemNextTo(this.rootNode, rootNode.getChildren().size());
+		return createItemAt(this.rootNode, rootNode.getChildren().size());
 	}
 
-	public TreeItem<TreeItemCellView> createItemNextTo(
+	public TreeItem<TreeItemCellView> createItemAt(
 			TreeItem<TreeItemCellView> parent, int indexOfItem) {
 		TreeItemCellView resultCell = new TreeItemCellView();
 		TreeItem<TreeItemCellView> resultTreeItem = new TreeItem<TreeItemCellView>(
@@ -50,9 +50,15 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		int indexOfItem = item.getParent().getChildren().indexOf(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			createItemNextTo(item.getParent(), indexOfItem);
-		} else { //if (event.getEventType() == NewItemRequestedEvent.CHILD)
-			createItemNextTo(item, 0);
+			createItemAt(item.getParent(), indexOfItem);
+		} else if (event.getEventType() == TreeItemCellEvent.CREATE_CHILD) {
+			createItemAt(item, 0);
+		} else if (event.getEventType() == TreeItemCellEvent.EXPAND) {
+			if (item.getChildren().size() > 0){
+				item.expandedProperty().set(true);
+				item.getChildren().get(0).getValue().requestFocus();
+				this.layout();
+			}
 		}
 	}
 

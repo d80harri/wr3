@@ -77,8 +77,8 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	@Override
 	public void requestFocus() {
 		super.requestFocus();
-		txtTitle.selectAll();
 		txtTitle.requestFocus();
+		txtTitle.selectAll();
 	}
 
 	public final BooleanProperty detailVisibleProperty() {

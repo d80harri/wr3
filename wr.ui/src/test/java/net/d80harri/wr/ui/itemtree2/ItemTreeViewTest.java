@@ -36,57 +36,79 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallCreateNewRootNode() {
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+				.createRootNode());
 
 		Assertions.assertThat(view.getItemTree().getRoot().getChildren())
-					.hasSize(1)
-					.contains(newCell);
+				.hasSize(1).contains(newCell);
 	}
 
 	@Test
 	public void createdRootNodeShouldBeSelected() throws InterruptedException {
-		TreeItem<TreeItemCellView> cellView = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> cellView = computeLater(() -> view
+				.createRootNode());
 
-		Assertions.assertThat(cellView.getValue().getTxtTitle().isFocused()).isTrue();
+		Assertions.assertThat(cellView.getValue().getTxtTitle().isFocused())
+				.isTrue();
 	}
 
 	@Test
 	public void shallAddNodeWhenCellRequestsNextSibling() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+				.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 
-		runLater(() -> newCell.getValue().fireEvent(new TreeItemCellEvent(
-				TreeItemCellEvent.CREATE_AFTER)));
+		runLater(() -> newCell.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.CREATE_AFTER)));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
 	}
-	
+
 	@Test
 	public void shallAddNodeWhenCellRequestsChild() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+				.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 
-		runLater(() -> newCell.getValue().fireEvent(new TreeItemCellEvent(
-				TreeItemCellEvent.CREATE_CHILD)));
-		Assertions.assertThat(newCell.getChildren()).hasSize(2);
+		Assertions.assertThat(newCell.getChildren()).hasSize(0);
+		runLater(() -> newCell.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.CREATE_CHILD)));
+		Assertions.assertThat(newCell.getChildren()).hasSize(1);
 	}
-	
+
 	@Test
 	public void shallFocusFirstChildWhenCellRequestsExpand() {
-		Assertions.fail("NYI");
+		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				TreeItem<TreeItemCellView> root = view.createRootNode();
+				root.getValue().getTxtTitle().setText("MyRoot");
+				TreeItem<TreeItemCellView> child = view.createItemAt(root, 0);
+				
+				root.getValue().fireEvent(
+						new TreeItemCellEvent(TreeItemCellEvent.EXPAND));
+				
+				return child;
+			}
+		});
+		
+		
+		
+		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused()).isTrue();
 	}
-	
+
 	@Test
 	public void shallFocusNextSibling() {
 		Assertions.fail("NYI");
 	}
-	
+
 	@Test
 	public void shallFocusParent() {
 		Assertions.fail("NYI");
 	}
-	
+
 	@Test
 	public void shallFocusPreviousSibling() {
 		Assertions.fail("NYI");
