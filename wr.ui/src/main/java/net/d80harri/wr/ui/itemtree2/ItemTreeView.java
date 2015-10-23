@@ -44,7 +44,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		return rootNode;
 	}
 
-	public void addNode(TreeItemCellEvent event) {
+	private void addNode(TreeItemCellEvent event) {
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		int indexOfItem = item.getParent().getChildren().indexOf(item);

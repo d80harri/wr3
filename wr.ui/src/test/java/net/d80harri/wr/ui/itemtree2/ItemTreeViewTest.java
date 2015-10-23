@@ -60,6 +60,37 @@ public class ItemTreeViewTest extends GuiTest {
 				TreeItemCellEvent.CREATE_AFTER)));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
 	}
+	
+	@Test
+	public void shallAddNodeWhenCellRequestsChild() {
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view.createRootNode());
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
+
+		runLater(() -> newCell.getValue().fireEvent(new TreeItemCellEvent(
+				TreeItemCellEvent.CREATE_CHILD)));
+		Assertions.assertThat(newCell.getChildren()).hasSize(2);
+	}
+	
+	@Test
+	public void shallFocusFirstChildWhenCellRequestsExpand() {
+		Assertions.fail("NYI");
+	}
+	
+	@Test
+	public void shallFocusNextSibling() {
+		Assertions.fail("NYI");
+	}
+	
+	@Test
+	public void shallFocusParent() {
+		Assertions.fail("NYI");
+	}
+	
+	@Test
+	public void shallFocusPreviousSibling() {
+		Assertions.fail("NYI");
+	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T computeLater(final Supplier<T> supplier) {
