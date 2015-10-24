@@ -10,10 +10,11 @@
 <fx:root type="javafx.scene.layout.AnchorPane" styleClass="wr"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	prefWidth="1024" prefHeight="768">
-	<VBox >
+	<VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
 		<children>
 			<Button text="New" onAction="#addEventHandler" />
-			<ItemTreeView fx:id="itemTreeView" />
+			<ItemTreeView fx:id="itemTreeView" 
+				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"/>
 		</children>
 	</VBox>
 </fx:root>
