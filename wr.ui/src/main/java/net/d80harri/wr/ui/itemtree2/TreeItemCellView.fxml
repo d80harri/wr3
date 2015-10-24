@@ -26,9 +26,9 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.StackPane?>
 
-<fx:root type="javafx.scene.layout.Pane" id="item"
+<fx:root fx:id="root" type="javafx.scene.layout.Pane" id="item"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<BorderPane>
+	<BorderPane prefWidth="${root.width}" >
 		<center>
 			<TextField fx:id="txtTitle" text="DELETE_ME" style="-fx-fon-size:20px"
 				styleClass="input-label">

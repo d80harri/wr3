@@ -21,13 +21,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
 
-<fx:root type="AnchorPane"
-		AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" 
-		xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<AnchorPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" >
-		<children>
-			<TreeView fx:id="itemTree" 
-				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" />
-		</children>
-	</AnchorPane>
+<fx:root fx:id="root" type="AnchorPane" AnchorPane.leftAnchor="0"
+	AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
+	AnchorPane.bottomAnchor="0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<TreeView fx:id="itemTree" prefWidth="${root.width}"
+		prefHeight="${root.height}" showRoot="false" />
 </fx:root>

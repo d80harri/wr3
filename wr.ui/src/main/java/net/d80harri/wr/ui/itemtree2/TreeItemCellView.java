@@ -50,6 +50,12 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
 	}
 
+	@Override
+	protected void layoutChildren() {
+		super.layoutChildren();
+		txtTitle.resize(getWidth(), getHeight());
+	}
+	
 	public TextField getTxtTitle() {
 		return txtTitle;
 	}
