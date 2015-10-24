@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "/net/d80harri/wr/ui/test-application-context.xml" })
 public class ItemTreePresenterTest {
 	@Mock
-	private ItemTreeView view;
+	private IItemTreeView view;
 
 	private ItemTreePresenter presenter;
 

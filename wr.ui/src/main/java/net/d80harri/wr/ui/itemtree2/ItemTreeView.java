@@ -19,10 +19,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		itemTree.setRoot(rootNode);
 	}
 
+	@Override
 	public TreeItem<TreeItemCellView> createRootNode() {
 		return createItemAt(this.rootNode, rootNode.getChildren().size());
 	}
 
+	@Override
 	public TreeItem<TreeItemCellView> createItemAt(
 			TreeItem<TreeItemCellView> parent, int indexOfItem) {
 		TreeItemCellView resultCell = new TreeItemCellView();

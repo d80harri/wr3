@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 /**
@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
  *
  * @param <P> the type of the presenter 
  */
-public abstract class ViewBase<P> extends Pane {
+public abstract class ViewBase<P> extends AnchorPane {
 
 	public static class FxmlDoesNotExistException extends RuntimeException {
 		private static final long serialVersionUID = -7287130651184888316L;

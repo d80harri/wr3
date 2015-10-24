@@ -15,12 +15,6 @@
 			<artifactId>wr.db</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.airhacks</groupId>
-			<artifactId>afterburner.fx</artifactId>
-			<version>1.6.0</version>
-		</dependency>
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
