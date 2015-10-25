@@ -47,13 +47,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	}
 
 	private void addNode(TreeItemCellEvent event) {
-		System.out.println("received");
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		int indexOfItem = item.getParent().getChildren().indexOf(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			createItemAt(item.getParent(), indexOfItem);
+			createItemAt(item.getParent(), indexOfItem+1);
 		} else if (event.getEventType() == TreeItemCellEvent.CREATE_CHILD) {
 			createItemAt(item, 0);
 		} else if (event.getEventType() == TreeItemCellEvent.EXPAND) {

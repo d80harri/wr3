@@ -1,5 +1,6 @@
 package net.d80harri.wr.ui.itemtree2;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 import javafx.application.Platform;
@@ -14,6 +15,7 @@ import org.loadui.testfx.GuiTest;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.objenesis.ObjenesisHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -42,6 +44,17 @@ public class ItemTreeViewTest extends GuiTest {
 		Assertions.assertThat(view.getItemTree().getRoot().getChildren())
 				.hasSize(1).contains(newCell);
 	}
+	
+	@Test
+	public void shallCreateItemAt() {
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+				.createRootNode());
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
+
+		TreeItem<TreeItemCellView> veryNewCell = computeLater(() -> view.createItemAt(view.getRootNode(), 1));
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2).contains(newCell, veryNewCell);
+	}
 
 	@Test
 	public void createdRootNodeShouldBeSelected() throws InterruptedException {
@@ -55,13 +68,18 @@ public class ItemTreeViewTest extends GuiTest {
 	@Test
 	public void shallAddNodeWhenCellRequestsNextSibling() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+		TreeItem<TreeItemCellView> firstCell = computeLater(() -> view
 				.createRootNode());
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
-
-		runLater(() -> newCell.getValue().fireEvent(
-				new TreeItemCellEvent(TreeItemCellEvent.CREATE_AFTER)));
+		TreeItem<TreeItemCellView> thirdCell = computeLater(() -> view
+				.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
+
+		runLater(() -> firstCell.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.CREATE_AFTER)));
+		Assertions.assertThat(view.getRootNode().getChildren().get(0)).isEqualTo(firstCell);
+		Assertions.assertThat(view.getRootNode().getChildren().get(2)).isEqualTo(thirdCell);
+		// TODO: register listener that fires when node is created
+		// use this listener to retrieve the reference of the newly created item
 	}
 
 	@Test

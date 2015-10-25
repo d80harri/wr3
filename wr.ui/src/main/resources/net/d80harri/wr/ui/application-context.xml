@@ -16,12 +16,4 @@
 	<context:annotation-config />
 	<context:component-scan base-package="net.d80harri.wr.ui" />
 	
-	<bean id="serviceProxy" class="net.d80harri.wr.ui.core.ServiceProxy">
-		<property name="entityFactory" ref="entityFactory" />
-	</bean>
-	
-	<bean class="net.d80harri.wr.ui.AppPresenter">
-		<property name="serviceProxy" ref="serviceProxy"/>
-	</bean>
-	
 </beans>
