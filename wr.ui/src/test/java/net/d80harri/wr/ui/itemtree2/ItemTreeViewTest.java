@@ -127,7 +127,7 @@ public class ItemTreeViewTest extends GuiTest {
 		});
 
 		runLater(() -> second.previousSibling().getValue()
-				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
 
 		Assertions.assertThat(second.getValue().getTxtTitle().isFocused())
 				.isTrue();
