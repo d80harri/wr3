@@ -1,7 +1,11 @@
 package net.d80harri.wr.ui;
 
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import net.d80harri.wr.ui.itemtree2.IItemTreeView;
 import net.d80harri.wr.ui.itemtree2.ViewBase;
 
@@ -13,7 +17,6 @@ public class AppView extends ViewBase<AppPresenter> {
 	@Override
 	protected void registerHandlers() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@FXML

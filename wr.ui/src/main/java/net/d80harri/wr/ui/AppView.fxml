@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
+<?import org.controlsfx.glyphfont.Glyph?>
 
 
 <fx:root type="javafx.scene.layout.AnchorPane" styleClass="wr"
@@ -13,7 +14,12 @@
 	prefWidth="1024" prefHeight="768">
 	<BorderPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
 		<top>
-			<Button text="New" onAction="#addEventHandler" />
+			<Button onAction="#addEventHandler" >
+				<graphic>
+					<Glyph fontFamily="FontAwesome" icon="PLUS_CIRCLE">
+					</Glyph>
+				</graphic>
+			</Button>
 		</top>
 		<center>
 			<ItemTreeView fx:id="itemTreeView" 

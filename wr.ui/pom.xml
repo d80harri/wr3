@@ -20,6 +20,12 @@
 			<artifactId>orika-core</artifactId>
 			<version>1.5.0-beta0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.10</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.loadui</groupId>
