@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -6,7 +6,9 @@ import javafx.event.EventType;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import net.d80harri.wr.ui.itemtree2.TreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.TreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

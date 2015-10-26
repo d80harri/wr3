@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

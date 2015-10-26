@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 public class ItemTreePresenter {
 

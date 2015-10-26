@@ -6,8 +6,8 @@ import org.controlsfx.glyphfont.Glyph;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import net.d80harri.wr.ui.itemtree2.IItemTreeView;
-import net.d80harri.wr.ui.itemtree2.ViewBase;
+import net.d80harri.wr.ui.itemtree.IItemTreeView;
+import net.d80harri.wr.ui.itemtree.ViewBase;
 
 public class AppView extends ViewBase<AppPresenter> {
 

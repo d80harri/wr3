@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -6,7 +6,10 @@ import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
-import net.d80harri.wr.ui.itemtree2.TreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.ItemTreePresenter;
+import net.d80harri.wr.ui.itemtree.ItemTreeView;
+import net.d80harri.wr.ui.itemtree.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

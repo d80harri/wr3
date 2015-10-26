@@ -1,9 +1,9 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.d80harri.wr.ui.itemtree2.TreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		IItemTreeView {

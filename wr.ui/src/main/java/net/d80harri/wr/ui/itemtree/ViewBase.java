@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree2;
+package net.d80harri.wr.ui.itemtree;
 
 import java.io.IOException;
 import java.net.URL;
