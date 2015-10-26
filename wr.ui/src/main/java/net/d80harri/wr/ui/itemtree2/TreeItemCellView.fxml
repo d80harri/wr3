@@ -46,7 +46,7 @@
 			</Button>
 		</left>
 		<bottom>
-			<StackPane managed="#detailVisible" visible="#detailVisible">
+			<StackPane fx:id="detailPane" visible="false" managed="false">
 				<TextField fx:id="description" styleClass="input-label" />
 			</StackPane>
 		</bottom>

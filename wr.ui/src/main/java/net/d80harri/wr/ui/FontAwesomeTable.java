@@ -1,5 +1,7 @@
 package net.d80harri.wr.ui;
 
+import java.awt.event.KeyEvent;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,9 +25,10 @@ import org.controlsfx.glyphfont.FontAwesome.Glyph;
 
 public class FontAwesomeTable extends Application {
 	TextField searchTerm = new TextField();
+	TextField shortCut = new TextField();
 	Button searchButton = new Button();
 	FlowPane grid = new FlowPane();
-	HBox searchPane = new HBox(searchTerm, searchButton);
+	HBox searchPane = new HBox(searchTerm, searchButton, shortCut);
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -37,6 +40,15 @@ public class FontAwesomeTable extends Application {
 				doFilter();
 			}
 		});
+		shortCut.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() {
+
+			@Override
+			public void handle(javafx.scene.input.KeyEvent event) {
+				String shortcut = event.getCode().name();
+				shortCut.setText(shortcut);
+			}
+		});
+		
 		doFilter();
 
 		Scene scene = new Scene(new BorderPane(new ScrollPane(grid),

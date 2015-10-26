@@ -171,11 +171,6 @@ public class ItemTreeViewTest extends GuiTest {
 		Assertions.assertThat(secondItem.previousSibling().getValue().getTxtTitle().isFocused())
 				.isTrue();
 	}
-	
-	@Test
-	public void shallViewDetail() {
-		Assertions.fail("NYI");
-	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T computeLater(final Supplier<T> supplier) {

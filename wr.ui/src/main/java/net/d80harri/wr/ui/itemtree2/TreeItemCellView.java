@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 
 public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 
@@ -41,9 +42,8 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 
 	@FXML
 	private TextField txtTitle;
-
 	@FXML
-	private BooleanProperty detailVisible = new SimpleBooleanProperty();
+	private Pane detailPane;
 
 	@Override
 	protected void registerHandlers() {
@@ -63,21 +63,30 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	private void txtTitle_KeyPressed(KeyEvent evt) {
 		if (evt.getCode() == KeyCode.ENTER) {
 			if (evt.isShiftDown()) {
-				this.setDetailVisible(!this.isDetailVisible());
+				this.detailPane.setVisible(!this.detailPane.isVisible());
+				this.detailPane.setManaged(!this.detailPane.isManaged());
 			} else if (evt.isControlDown()) {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.CREATE_CHILD));
 			} else {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.CREATE_AFTER));
 			}
 		} else if (evt.getCode() == KeyCode.UP) {
-			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP));
-		} else if (evt.getCode() == KeyCode.DOWN) {
-			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN));
-		} else if (evt.getCode() == KeyCode.RIGHT) {
-			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND));
-		} else if (evt.getCode() == KeyCode.LEFT) {
 			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_TO_PARENT));
+		} else if (evt.getCode() == KeyCode.DOWN) {
+			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND));
+		} else if (evt.getCode() == KeyCode.RIGHT && caretIsAtLastPositionInTitle()) {
+			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN));
+		} else if (evt.getCode() == KeyCode.LEFT && caretIsAtFirstPositionInTitle()) {
+			this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP));
 		}
+	}
+	
+	private boolean caretIsAtLastPositionInTitle() {
+		return txtTitle.getCaretPosition() == txtTitle.getText().length();
+	}
+	
+	private boolean caretIsAtFirstPositionInTitle() {
+		return txtTitle.getCaretPosition() == 0;
 	}
 
 	@Override
@@ -87,16 +96,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 		txtTitle.selectAll();
 	}
 
-	public final BooleanProperty detailVisibleProperty() {
-		return this.detailVisible;
+	public Pane getDetailPane() {
+		return detailPane;
 	}
-
-	public final boolean isDetailVisible() {
-		return this.detailVisibleProperty().get();
-	}
-
-	public final void setDetailVisible(final boolean detailVisible) {
-		this.detailVisibleProperty().set(detailVisible);
-	}
-
 }
