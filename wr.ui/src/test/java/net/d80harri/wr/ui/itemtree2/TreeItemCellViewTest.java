@@ -1,7 +1,6 @@
 package net.d80harri.wr.ui.itemtree2;
 
-import java.util.function.Consumer;
-
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Parent;
@@ -44,13 +43,28 @@ public class TreeItemCellViewTest extends GuiTest {
 
 	@Test
 	public void userWantsToNavigateToPrevious() {
-		shortCutHelper(TreeItemCellEvent.MOVE_UP, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.HOME).type(KeyCode.LEFT));
+		shortCutHelper(TreeItemCellEvent.MOVE_UP,
+				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
+						.type(KeyCode.HOME).type(KeyCode.LEFT));
 	}
 
 	@Test
 	public void userWantsToNavigateToNext() {
 		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, KeyCode.RIGHT);
 	}
+
+	@Test
+	public void userWantsToMoveTheCursorToTheRight() {
+		shortCutHelper(null, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.HOME)
+				.type(KeyCode.RIGHT));
+	}
+	
+	@Test
+	public void userWantsToMoveTheCursorToTheLeft() {
+		shortCutHelper(null, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.LEFT));
+	}
+
 
 	@Test
 	public void userWantsToNavigateToParent() {
@@ -67,11 +81,12 @@ public class TreeItemCellViewTest extends GuiTest {
 		shortCutHelper(TreeItemCellEvent.CREATE_CHILD, KeyCode.CONTROL,
 				KeyCode.ENTER);
 	}
-	
+
 	@Test
 	public void shallViewDetail() {
 		Assertions.assertThat(view.getDetailPane().isVisible()).isFalse();
-		click(view.getTxtTitle(), MouseButton.PRIMARY).type(KeyCode.SHIFT, KeyCode.ENTER);
+		click(view.getTxtTitle(), MouseButton.PRIMARY).type(KeyCode.SHIFT,
+				KeyCode.ENTER);
 		Assertions.assertThat(view.getDetailPane().isVisible()).isTrue();
 	}
 
@@ -79,13 +94,13 @@ public class TreeItemCellViewTest extends GuiTest {
 	public void userWantsToToggleDetailView() {
 		Assertions.assertThat(view.getDetailPane().isVisible()).isFalse();
 		Assertions.assertThat(view.getDetailPane().isManaged()).isFalse();
-		
+
 		click(view.getTxtTitle(), MouseButton.PRIMARY).type(KeyCode.SHIFT,
 				KeyCode.ENTER);
 
 		Assertions.assertThat(view.getDetailPane().isVisible()).isTrue();
 		Assertions.assertThat(view.getDetailPane().isManaged()).isTrue();
-		
+
 		click(view.getTxtTitle(), MouseButton.PRIMARY).type(KeyCode.SHIFT,
 				KeyCode.ENTER);
 
@@ -97,21 +112,27 @@ public class TreeItemCellViewTest extends GuiTest {
 			Runnable additionalActions) {
 		EventHandler<TreeItemCellEvent> mockedEvent = Mockito
 				.mock(EventHandler.class);
-		view.addEventHandler(event, mockedEvent);
+		view.addEventHandler(TreeItemCellView.TreeItemCellEvent.BASE, mockedEvent);
 		
 		if (additionalActions != null)
 			additionalActions.run();
-
-		ArgumentCaptor<TreeItemCellEvent> argument = ArgumentCaptor
-				.forClass(TreeItemCellEvent.class);
-		Mockito.verify(mockedEvent, Mockito.times(1))
-				.handle(argument.capture());
-		Assertions.assertThat(argument.getValue().getEventType()).isSameAs(
-				event);
+		
+		if (event == null) {
+			Mockito.verify(mockedEvent, Mockito.times(0)).handle(Mockito.any());
+		} else {
+			ArgumentCaptor<TreeItemCellEvent> argument = ArgumentCaptor
+					.forClass(TreeItemCellEvent.class);
+			Mockito.verify(mockedEvent, Mockito.times(1)).handle(
+					argument.capture());
+			Assertions.assertThat(argument.getValue().getEventType()).isSameAs(
+					event);
+		}
 	}
 
 	private void shortCutHelper(EventType<TreeItemCellEvent> event,
 			KeyCode... code) {
-		shortCutHelper(event, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(code));
+		shortCutHelper(event,
+				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
+						.type(code));
 	}
 }
