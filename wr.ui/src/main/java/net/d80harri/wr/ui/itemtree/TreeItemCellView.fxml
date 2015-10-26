@@ -26,6 +26,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.StackPane?>
 <?import org.controlsfx.glyphfont.Glyph?>
+<?import net.d80harri.wr.ui.components.FittingHeightTextArea?>
 
 <fx:root fx:id="root" type="javafx.scene.layout.Pane" id="item"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
@@ -46,8 +47,8 @@
 			</Button>
 		</left>
 		<bottom>
-			<StackPane fx:id="detailPane" visible="false" managed="false">
-				<TextField fx:id="description" styleClass="input-label" />
+			<StackPane fx:id="detailPane" >
+				<FittingHeightTextArea  fx:id="description" styleClass="input-label"/>
 			</StackPane>
 		</bottom>
 	</BorderPane>

@@ -1,16 +1,23 @@
 package net.d80harri.wr.ui.itemtree;
 
+import java.awt.TextArea;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
-public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
+public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements Initializable {
 
 	public static class TreeItemCellEvent extends Event {
 		private static final long serialVersionUID = 3699285621625278032L;
@@ -44,10 +51,22 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	private TextField txtTitle;
 	@FXML
 	private Pane detailPane;
-
+	@FXML
+	private FittingHeightTextArea descriptionArea;
+	
+	private BooleanProperty detailVisible;
+	
 	@Override
 	protected void registerHandlers() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		detailVisible = new SimpleBooleanProperty(false);
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
+		detailPane.managedProperty().bind(detailVisible);
+		detailPane.visibleProperty().bind(detailVisible);
 	}
 
 	@Override
@@ -63,8 +82,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	private void txtTitle_KeyPressed(KeyEvent evt) {
 		if (evt.getCode() == KeyCode.ENTER) {
 			if (evt.isShiftDown()) {
-				this.detailPane.setVisible(!this.detailPane.isVisible());
-				this.detailPane.setManaged(!this.detailPane.isManaged());
+				detailVisible.set(!detailVisible.get());
 			} else if (evt.isControlDown()) {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.CREATE_CHILD));
 			} else {
@@ -88,15 +106,18 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> {
 	private boolean caretIsAtFirstPositionInTitle() {
 		return txtTitle.getCaretPosition() == 0;
 	}
-
-	@Override
-	public void requestFocus() {
-		super.requestFocus();
+	
+	public void visit() {
 		txtTitle.requestFocus();
-		txtTitle.selectAll();
+		txtTitle.positionCaret(0);
+	}
+	
+	public void go() {
+		this.detailVisible.set(false);
 	}
 
 	public Pane getDetailPane() {
 		return detailPane;
 	}
+
 }

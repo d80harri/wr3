@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import net.d80harri.wr.ui.itemtree2.ItemTreeView?>
+<?import net.d80harri.wr.ui.itemtree.ItemTreeView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>

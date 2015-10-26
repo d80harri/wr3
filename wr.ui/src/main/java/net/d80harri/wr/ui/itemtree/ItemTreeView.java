@@ -34,7 +34,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 				this::handleTreeCellEvent);
 		parent.getChildren().add(indexOfItem, resultTreeItem);
 		itemTree.layout();
-		resultCell.requestFocus();
+		resultCell.visit();
 		return resultTreeItem;
 	}
 
@@ -49,27 +49,28 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	private void handleTreeCellEvent(TreeItemCellEvent event) {
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
+		item.getValue().go();
 		int rowOfItem = itemTree.getRow(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			createItemAt(item.getParent(), rowOfItem + 1);
+			createItemAt(item.getParent(), item.getParent().getChildren().indexOf(item) + 1);
 		} else if (event.getEventType() == TreeItemCellEvent.CREATE_CHILD) {
 			TreeItem<TreeItemCellView> createdItem = createItemAt(item, 0);
 			item.expandedProperty().set(true);
 			itemTree.layout();
-			createdItem.getValue().requestFocus();
+			createdItem.getValue().visit();
 		} else if (event.getEventType() == TreeItemCellEvent.EXPAND) {
 			if (item.getChildren().size() > 0) {
 				item.expandedProperty().set(true);
 				itemTree.layout();
-				item.getChildren().get(0).getValue().requestFocus();
+				item.getChildren().get(0).getValue().visit();
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_UP) {
-			itemTree.getTreeItem(rowOfItem - 1).getValue().requestFocus();
+			itemTree.getTreeItem(rowOfItem - 1).getValue().visit();
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_DOWN) {
-			itemTree.getTreeItem(rowOfItem + 1).getValue().requestFocus();
+			itemTree.getTreeItem(rowOfItem + 1).getValue().visit();
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_TO_PARENT) {
-			item.getParent().getValue().requestFocus();
+			item.getParent().getValue().visit();
 		}
 	}
 
