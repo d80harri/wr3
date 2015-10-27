@@ -1,18 +1,22 @@
 package net.d80harri.wr.ui;
 
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
 import net.d80harri.wr.ui.itemtree.IItemTreeView;
 import net.d80harri.wr.ui.itemtree.ViewBase;
 
-public class AppView extends ViewBase<AppPresenter> {
+public class AppView extends ViewBase<AppPresenter> implements Initializable {
 
 	@FXML
 	private IItemTreeView itemTreeView;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	}
 	
 	@Override
 	protected void registerHandlers() {

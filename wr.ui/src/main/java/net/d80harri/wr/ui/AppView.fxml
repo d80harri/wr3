@@ -7,14 +7,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
 <?import org.controlsfx.glyphfont.Glyph?>
-
+<?import java.net.URL?>
 
 <fx:root type="javafx.scene.layout.AnchorPane" styleClass="wr"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	prefWidth="1024" prefHeight="768">
-	<BorderPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+	<BorderPane AnchorPane.leftAnchor="0"
+		AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
+		AnchorPane.bottomAnchor="0">
 		<top>
-			<Button onAction="#addEventHandler" >
+			<Button onAction="#addEventHandler">
 				<graphic>
 					<Glyph fontFamily="FontAwesome" icon="PLUS_CIRCLE">
 					</Glyph>
@@ -22,8 +24,13 @@
 			</Button>
 		</top>
 		<center>
-			<ItemTreeView fx:id="itemTreeView" 
-				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"/>
+			<ItemTreeView fx:id="itemTreeView"
+				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+				AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" />
 		</center>
 	</BorderPane>
+
+	<stylesheets>
+		<URL value="@app.css" />
+	</stylesheets>
 </fx:root>

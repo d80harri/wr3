@@ -37,6 +37,7 @@ public class FittingHeightTextArea extends StackPane {
 				super.layoutChildren();
 				if (content == null) {
 					content = (Region) lookup(".content");
+					content.getStyleClass().add("input-label");
 					contentHeight.bind(content.heightProperty());
 					content.heightProperty().addListener(new ChangeListener<Number>() {
 						@Override
@@ -48,10 +49,12 @@ public class FittingHeightTextArea extends StackPane {
 			};
 		};
 		this.textArea.setWrapText(true); 
+		this.textArea.getStyleClass().add("input-label");
  
         this.label = new Label();
 		this.label.setWrapText(true);
 		this.label.prefWidthProperty().bind(this.textArea.widthProperty());
+		this.label.getStyleClass().add("input-label");
 		label.textProperty().bind(new StringBinding() {
 			{
 				bind(textArea.textProperty());
