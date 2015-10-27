@@ -116,6 +116,23 @@ public class ItemTreeViewTest extends GuiTest {
 		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
 				.isTrue();
 	}
+	
+	@Test
+	public void shallNotThrowExceptionWhenExpandWithNoChildren() {
+		TreeItem<TreeItemCellView> leafItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				return view.createRootNode();
+			}
+		});
+
+		runLater(() -> leafItem.getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND)));
+
+		Assertions.assertThat(leafItem.getValue().getTxtTitle().isFocused())
+				.isTrue();
+	}
 
 	@Test
 	public void shallFocusNextSibling() {

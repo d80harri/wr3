@@ -51,8 +51,20 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void userWantsToNavigateToNext() {
+	public void userWantsToNavigateToPreviousUsingUpArrow() {
+		shortCutHelper(TreeItemCellEvent.MOVE_UP, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
+				.type(KeyCode.UP));
+	}
+	
+	@Test
+	public void userWantsToNavigateToNextUsingRightArrow() {
 		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, KeyCode.RIGHT);
+	}
+	
+	@Test
+	public void userWantsToNavigateToNextUsingDownArrow() {
+		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
+				.type(KeyCode.DOWN));
 	}
 
 	@Test
@@ -70,12 +82,17 @@ public class TreeItemCellViewTest extends GuiTest {
 
 	@Test
 	public void userWantsToNavigateToParent() {
-		shortCutHelper(TreeItemCellEvent.MOVE_TO_PARENT, KeyCode.UP);
+		shortCutHelper(TreeItemCellEvent.MOVE_TO_PARENT, KeyCode.CONTROL, KeyCode.UP);
 	}
 
 	@Test
 	public void userWantsToExpandNode() {
-		shortCutHelper(TreeItemCellEvent.EXPAND, KeyCode.DOWN);
+		shortCutHelper(TreeItemCellEvent.EXPAND, KeyCode.CONTROL, KeyCode.RIGHT);
+	}
+	
+	@Test
+	public void userWantsToCollapsedNode() {
+		shortCutHelper(TreeItemCellEvent.COLLAPSE, KeyCode.CONTROL, KeyCode.LEFT);
 	}
 
 	@Test
