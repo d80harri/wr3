@@ -18,8 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/net/d80harri/wr/ui/test-application-context.xml" })
 public class TreeItemCellViewTest extends GuiTest {
 	private TreeItemCellView view;
 
