@@ -23,25 +23,32 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 
 		public static final EventType<TreeItemCellEvent> BASE = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				"BASE");
+		
+		public static final EventType<TreeItemCellEvent> NAVIGATION = new EventType<TreeItemCellView.TreeItemCellEvent>(BASE,
+				"NAVIGATION");
+		
+		public static final EventType<TreeItemCellEvent> MANIPULATION = new EventType<TreeItemCellView.TreeItemCellEvent>(BASE,
+				"MANIPULATION");
+		
 		public static final EventType<TreeItemCellEvent> CREATE_AFTER = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "NEXT");
+				MANIPULATION, "NEXT");
 		public static final EventType<TreeItemCellEvent> CREATE_CHILD = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "CHILD");
+				MANIPULATION, "CHILD");
+		
+		public static final EventType<TreeItemCellEvent> EXPAND = new EventType<TreeItemCellView.TreeItemCellEvent>(
+				MANIPULATION, "EXPAND");
+		
+		public static final EventType<TreeItemCellEvent> COLLAPSE = new EventType<TreeItemCellView.TreeItemCellEvent>(
+				MANIPULATION, "COLLAPSE");
 
 		public static final EventType<TreeItemCellEvent> MOVE_UP = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVE_UP");
+				NAVIGATION, "MOVE_UP");
 
 		public static final EventType<TreeItemCellEvent> MOVE_DOWN = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVE_DOWN");
-
-		public static final EventType<TreeItemCellEvent> EXPAND = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "EXPAND");
-
-		public static final EventType<TreeItemCellEvent> COLLAPSE = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "COLLAPSE");;
+				NAVIGATION, "MOVE_DOWN");
 
 		public static final EventType<TreeItemCellEvent> MOVE_TO_PARENT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVE_TO_PARENT");
+				NAVIGATION, "MOVE_TO_PARENT");
 
 		public TreeItemCellEvent(
 				EventType<? extends TreeItemCellEvent> eventType) {
