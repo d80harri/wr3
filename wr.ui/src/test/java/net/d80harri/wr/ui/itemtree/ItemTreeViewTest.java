@@ -1,29 +1,18 @@
 package net.d80harri.wr.ui.itemtree;
 
-import java.util.HashMap;
 import java.util.function.Supplier;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
-import net.d80harri.wr.ui.itemtree.ItemTreePresenter;
-import net.d80harri.wr.ui.itemtree.ItemTreeView;
-import net.d80harri.wr.ui.itemtree.TreeItemCellView;
 import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.loadui.testfx.GuiTest;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.objenesis.ObjenesisHelper;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/net/d80harri/wr/ui/test-application-context.xml" })
 public class ItemTreeViewTest extends GuiTest {
 	private ItemTreeView view;
 
