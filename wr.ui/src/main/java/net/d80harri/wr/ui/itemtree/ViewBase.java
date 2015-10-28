@@ -37,7 +37,6 @@ public abstract class ViewBase<P> extends AnchorPane {
 	protected void loadFxml() {
 		String location = getClass().getSimpleName() + ".fxml";
 		URL locationUrl = getClass().getResource(location);
-		listFilesInThisDir();
 		if (locationUrl == null)
 			throw new FxmlDoesNotExistException("Location " + location + " not found");
 		FXMLLoader fxmlLoader = new FXMLLoader(locationUrl);
@@ -55,14 +54,4 @@ public abstract class ViewBase<P> extends AnchorPane {
 		this.presenter = presenter;
 	}
 
-	public void listFilesInThisDir() {
-		try {
-			for(String file : new File(ViewBase.class.getResource(".").toURI()).list()){
-				System.out.println(file);
-			}
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

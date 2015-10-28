@@ -6,8 +6,10 @@ jdk:
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
-script:
+before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+  
+script:
   - mvn -B test -Dmaven.test.failure.ignore=true
