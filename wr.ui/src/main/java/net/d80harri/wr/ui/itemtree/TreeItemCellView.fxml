@@ -32,7 +32,9 @@
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<BorderPane prefWidth="${root.width}" >
 		<center>
-			<TextField fx:id="txtTitle" style="-fx-fon-size:20px"
+			<TextField fx:id="txtTitle" 
+				promptText="Enter a title"
+				style="-fx-fon-size:20px"
 				styleClass="input-label">
 				<font>
 					<Font size="18.0" />
@@ -48,7 +50,9 @@
 		</left>
 		<bottom>
 			<StackPane fx:id="detailPane" >
-				<FittingHeightTextArea  fx:id="description" styleClass="input-label"/>
+				<FittingHeightTextArea  fx:id="description" 
+					promptText="Enter a description"
+					styleClass="input-label"/>
 			</StackPane>
 		</bottom>
 	</BorderPane>

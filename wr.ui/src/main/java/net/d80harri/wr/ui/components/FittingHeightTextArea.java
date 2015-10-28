@@ -2,8 +2,10 @@ package net.d80harri.wr.ui.components;
 
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -109,4 +111,17 @@ public class FittingHeightTextArea extends StackPane {
     public TextArea getTextArea() {
         return textArea;
     }
+    
+    public StringProperty promptTextProperty() {
+    	return textArea.promptTextProperty();
+    }
+    
+    public String getPromptText() {
+    	return promptTextProperty().get();
+    }
+    
+    public void setPromptText(String value) {
+    	promptTextProperty().set(value);
+    }
+  
 }
