@@ -70,7 +70,9 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_DOWN) {
 			itemTree.getTreeItem(rowOfItem + 1).getValue().visit();
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_TO_PARENT) {
-			item.getParent().getValue().visit();
+			if (item.getParent() != this.rootNode) {
+				item.getParent().getValue().visit();
+			}
 		}
 	}
 
