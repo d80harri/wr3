@@ -1,22 +1,19 @@
 package net.d80harri.wr.ui.itemtree;
 
-import java.awt.TextArea;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import net.d80harri.wr.ui.components.FittingHeightTextArea;
-import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import net.d80harri.wr.ui.components.FittingHeightTextArea;
 
 public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		Initializable {
@@ -90,6 +87,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		if (evt.getCode() == KeyCode.ENTER) {
 			if (evt.isShiftDown()) {
 				detailVisible.set(!detailVisible.get());
+				descriptionArea.requestFocus();
 			} else if (evt.isControlDown()) {
 				this.fireEvent(new TreeItemCellEvent(
 						TreeItemCellEvent.CREATE_CHILD));
@@ -146,6 +144,10 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 
 	public Pane getDetailPane() {
 		return detailPane;
+	}
+	
+	public FittingHeightTextArea getDescriptionArea() {
+		return descriptionArea;
 	}
 
 }
