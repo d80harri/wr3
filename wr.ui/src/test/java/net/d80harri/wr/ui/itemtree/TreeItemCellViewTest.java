@@ -40,25 +40,25 @@ public class TreeItemCellViewTest extends GuiTest {
 
 	@Test
 	public void userWantsToNavigateToPrevious() {
-		shortCutHelper(TreeItemCellEvent.MOVE_UP,
+		shortCutHelper(TreeItemCellEvent.GOTO_PREVIOUS,
 				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
 						.type(KeyCode.HOME).type(KeyCode.LEFT));
 	}
 
 	@Test
 	public void userWantsToNavigateToPreviousUsingUpArrow() {
-		shortCutHelper(TreeItemCellEvent.MOVE_UP, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
+		shortCutHelper(TreeItemCellEvent.GOTO_PREVIOUS, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
 				.type(KeyCode.UP));
 	}
 	
 	@Test
 	public void userWantsToNavigateToNextUsingRightArrow() {
-		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, KeyCode.RIGHT);
+		shortCutHelper(TreeItemCellEvent.GOTO_NEXT, KeyCode.RIGHT);
 	}
 	
 	@Test
 	public void userWantsToNavigateToNextUsingDownArrow() {
-		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
+		shortCutHelper(TreeItemCellEvent.GOTO_NEXT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
 				.type(KeyCode.DOWN));
 	}
 
@@ -73,27 +73,88 @@ public class TreeItemCellViewTest extends GuiTest {
 		shortCutHelper(null, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
 				.type(KeyCode.LEFT));
 	}
-
-
+	
 	@Test
-	public void userWantsToNavigateToParent() {
-		shortCutHelper(TreeItemCellEvent.MOVE_TO_PARENT, KeyCode.CONTROL, KeyCode.UP);
+	public void userWantsToOutdent() {
+		shortCutHelper(TreeItemCellEvent.OUTDENT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.ALT, KeyCode.LEFT));
+	}
+	
+	@Test
+	public void userWantsToOutdentWithTab() {
+		shortCutHelper(TreeItemCellEvent.OUTDENT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.SHIFT, KeyCode.TAB));
+	}
+	
+	@Test
+	public void userWantsToMoveItemUp() {
+		shortCutHelper(TreeItemCellEvent.MOVE_UP, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.ALT, KeyCode.UP));
+	}
+	
+	@Test
+	public void userWantsToIndentItem() {
+		shortCutHelper(TreeItemCellEvent.INDENT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.ALT, KeyCode.RIGHT));
+	}
+	
+	@Test
+	public void userWantsToIndentItemWithTab() {
+		shortCutHelper(TreeItemCellEvent.INDENT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.TAB));
+	}
+	
+	@Test
+	public void userWantsToMoveItemDown() {
+		shortCutHelper(TreeItemCellEvent.MOVE_DOWN, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".").type(KeyCode.END)
+				.type(KeyCode.ALT, KeyCode.DOWN));
 	}
 
 	@Test
 	public void userWantsToExpandNode() {
-		shortCutHelper(TreeItemCellEvent.EXPAND, KeyCode.CONTROL, KeyCode.RIGHT);
+		shortCutHelper(TreeItemCellEvent.TOGGLE_EXPAND, KeyCode.CONTROL, KeyCode.SPACE);
 	}
 	
 	@Test
-	public void userWantsToCollapsedNode() {
-		shortCutHelper(TreeItemCellEvent.COLLAPSE, KeyCode.CONTROL, KeyCode.LEFT);
+	public void userWantsToSplit() {
+		shortCutHelper(TreeItemCellEvent.SPLIT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
+				.type(KeyCode.ENTER));
 	}
-
+	
 	@Test
-	public void userWantsToCreateAChild() {
-		shortCutHelper(TreeItemCellEvent.CREATE_CHILD, KeyCode.CONTROL,
-				KeyCode.ENTER);
+	public void userWantsToDeleteEmptyItemWithDelete() {
+		shortCutHelper(TreeItemCellEvent.DELETE, () -> click(view.getTxtTitle(), MouseButton.PRIMARY)
+				.type(KeyCode.DELETE));
+	}
+	
+	@Test
+	public void userWantsToMergeItemWithNext() {
+		shortCutHelper(TreeItemCellEvent.MERGEWITH_NEXT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...")
+				.type(KeyCode.DELETE));
+	}
+	
+	@Test
+	public void userWantsToDeleteEmptyItemWithBackspace() {
+		shortCutHelper(TreeItemCellEvent.DELETE, () -> click(view.getTxtTitle(), MouseButton.PRIMARY)
+				.type(KeyCode.BACK_SPACE));
+	}
+	
+	@Test
+	public void userWantsToMergeItemWithPreviousItem() {
+		shortCutHelper(TreeItemCellEvent.MERGEWITH_PREVIOUS, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.HOME)
+				.type(KeyCode.BACK_SPACE));
+	}
+	
+	@Test
+	public void userWantsDeleteACharWithBackspace() {
+		shortCutHelper(null, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("ABC").type(KeyCode.LEFT).type(KeyCode.BACK_SPACE));
+		Assertions.assertThat(view.getTxtTitle().getText()).isEqualTo("AC");
+	}
+	
+	@Test
+	public void userWantsDeleteACharWithDEL() {
+		shortCutHelper(null, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("ABC").type(KeyCode.LEFT).type(KeyCode.LEFT).type(KeyCode.DELETE));
+		Assertions.assertThat(view.getTxtTitle().getText()).isEqualTo("AC");
 	}
 
 	@Test
@@ -133,7 +194,7 @@ public class TreeItemCellViewTest extends GuiTest {
 			additionalActions.run();
 		
 		if (event == null) {
-			Mockito.verify(mockedEvent, Mockito.times(0)).handle(Mockito.any());
+			Mockito.verify(mockedEvent, Mockito.never()).handle(Mockito.any());
 		} else {
 			ArgumentCaptor<TreeItemCellEvent> argument = ArgumentCaptor
 					.forClass(TreeItemCellEvent.class);

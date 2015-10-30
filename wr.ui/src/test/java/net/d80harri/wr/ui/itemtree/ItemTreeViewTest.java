@@ -1,5 +1,8 @@
 package net.d80harri.wr.ui.itemtree;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
 import javafx.application.Platform;
@@ -75,19 +78,6 @@ public class ItemTreeViewTest extends GuiTest {
 	}
 
 	@Test
-	public void shallAddNodeWhenCellRequestsChild() {
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
-				.createRootNode());
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
-
-		Assertions.assertThat(newCell.getChildren()).hasSize(0);
-		runLater(() -> newCell.getValue().fireEvent(
-				new TreeItemCellEvent(TreeItemCellEvent.CREATE_CHILD)));
-		Assertions.assertThat(newCell.getChildren()).hasSize(1);
-	}
-
-	@Test
 	public void shallFocusFirstChildWhenCellRequestsExpand() {
 		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
 
@@ -100,7 +90,7 @@ public class ItemTreeViewTest extends GuiTest {
 		});
 
 		runLater(() -> childItem.getParent().getValue()
-				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND)));
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
 
 		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
 				.isTrue();
@@ -117,7 +107,7 @@ public class ItemTreeViewTest extends GuiTest {
 		});
 
 		runLater(() -> leafItem.getValue()
-				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.EXPAND)));
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
 
 		Assertions.assertThat(leafItem.getValue().getTxtTitle().isFocused())
 				.isTrue();
@@ -136,50 +126,12 @@ public class ItemTreeViewTest extends GuiTest {
 		});
 
 		runLater(() -> second.previousSibling().getValue()
-				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.GOTO_NEXT)));
 
 		Assertions.assertThat(second.getValue().getTxtTitle().isFocused())
 				.isTrue();
 	}
-
-	@Test
-	public void shallFocusParent() {
-		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
-
-			@Override
-			public TreeItem<TreeItemCellView> get() {
-				TreeItem<TreeItemCellView> root = view.createRootNode();
-				root.getValue().getTxtTitle().setText("MyRoot");
-				return view.createItemAt(root, 0);
-			}
-		});
-
-		runLater(() -> childItem.getValue().fireEvent(
-				new TreeItemCellEvent(TreeItemCellEvent.MOVE_TO_PARENT)));
-
-		Assertions.assertThat(
-				childItem.getParent().getValue().getTxtTitle().isFocused())
-				.isTrue();
-	}
 	
-	@Test
-	public void shallNotThrowExceptionWhenMoveToParentFromRootNode() {
-		TreeItem<TreeItemCellView> root = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
-
-			@Override
-			public TreeItem<TreeItemCellView> get() {
-				return view.createRootNode();
-			}
-		});
-
-		runLater(() -> root.getValue().fireEvent(
-				new TreeItemCellEvent(TreeItemCellEvent.MOVE_TO_PARENT)));
-
-		Assertions.assertThat(
-				root.getValue().getTxtTitle().isFocused())
-				.isTrue();
-	}
-
 	@Test
 	public void shallFocusPreviousSibling() {
 		TreeItem<TreeItemCellView> secondItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
@@ -193,62 +145,68 @@ public class ItemTreeViewTest extends GuiTest {
 		});
 
 		runLater(() -> secondItem.getValue()
-				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.GOTO_PREVIOUS)));
 
 		Assertions.assertThat(secondItem.previousSibling().getValue().getTxtTitle().isFocused())
 				.isTrue();
 	}
-
-	@SuppressWarnings("unchecked")
-	private <T> T computeLater(final Supplier<T> supplier) {
-		Object[] cell = new Object[1];
-		Runnable runable = new Runnable() {
+	
+	@Test
+	public void shallDeleteItem() {
+		TreeItem<TreeItemCellView> rootNode = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
 
 			@Override
-			public void run() {
-				synchronized (this) {
-					try {
-						cell[0] = supplier.get();
-					} finally {
-						notify();
-					}
-				}
+			public TreeItem<TreeItemCellView> get() {
+				return view.createRootNode();
 			}
-		};
+		});
+		
+		runLater(() -> rootNode.getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.DELETE)));
+		
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
+	}
+	
+	@Test
+	public void shallIndentItem() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> view.createRootNode());
+		runLater(() -> rootNode2.getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT)));
+		
+		Assertions.assertThat(rootNode1.getChildren()).hasSize(1);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
+	}
+	
+	@Test
+	public void shallOutdentItem() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view.createRootNode());
+		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> view.createItemAt(rootNode1, 0));
+		runLater(() -> rootNode2.getValue()
+				.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT)));
+		
+		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
+	}
 
-		Platform.runLater(runable);
-		synchronized (runable) {
-			try {
-				runable.wait();
-			} catch (InterruptedException e) {
-				throw new Error(e);
-			}
+	private <T> T computeLater(final Supplier<T> supplier) {
+		final FutureTask<T> query = new FutureTask<>(new Callable<T>() {
+		    @Override
+		    public T call() throws Exception {
+		        return supplier.get();
+		    }
+		});
+		
+		Platform.runLater(query);
+		
+		try {
+			return query.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new Error(e.getMessage(), e);
 		}
-		return (T) cell[0];
 	}
 
 	private void runLater(final Runnable callback) {
-		Runnable runable = new Runnable() {
-
-			@Override
-			public void run() {
-				synchronized (this) {
-					try {
-						callback.run();
-					} finally {
-						notify();
-					}
-				}
-			}
-		};
-
-		Platform.runLater(runable);
-		synchronized (runable) {
-			try {
-				runable.wait();
-			} catch (InterruptedException e) {
-				throw new Error(e);
-			}
-		}
+		computeLater(() -> {callback.run(); return null;});
 	}
 }
