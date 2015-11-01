@@ -257,6 +257,70 @@ public class ItemTreeViewTest extends GuiTest {
 		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText()).isEqualTo("ASDF");
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
+	
+	@Test
+	public void moveDown() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("ASDF");
+			return result;
+		});
+		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("jklö");
+			return result;
+		});
+		runLater(() -> rootNode1.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
+
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2).containsExactly(rootNode2, rootNode1);
+	}
+	
+	@Test
+	public void moveLastElementDown() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("ASDF");
+			return result;
+		});
+
+		runLater(() -> rootNode1.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
+
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1).containsExactly(rootNode1);
+	}
+	
+	@Test
+	public void moveUp() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("ASDF");
+			return result;
+		});
+		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("jklö");
+			return result;
+		});
+		runLater(() -> rootNode2.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2).containsExactly(rootNode2, rootNode1);
+	}
+	
+	@Test
+	public void moveFirstItemUp() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("ASDF");
+			return result;
+		});
+
+		runLater(() -> rootNode1.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
+
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1).containsExactly(rootNode1);
+	}
 
 	@Test
 	public void shallOutdentItem() {
