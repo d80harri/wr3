@@ -56,13 +56,19 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		int rowOfItem = itemTree.getRow(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			createItemAt(item.getParent(), item.getParent().getChildren()
+			TreeItem<TreeItemCellView> newItem = createItemAt(item.getParent(), item.getParent().getChildren()
 					.indexOf(item) + 1);
+			newItem.getValue().getTxtTitle().setText(event.getTitle());
 		} else if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
 			if (item.getChildren().size() > 0) {
-				item.expandedProperty().set(!item.expandedProperty().get());
+				boolean expanded = item.expandedProperty().get();
+				item.expandedProperty().set(!expanded);
 				itemTree.layout();
-				item.getChildren().get(0).getValue().visit();
+				if (expanded) {
+					item.getValue().visit();
+				} else {
+					item.getChildren().get(0).getValue().visit();					
+				}
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.GOTO_PREVIOUS) {
 			itemTree.getTreeItem(rowOfItem - 1).getValue().visit();
@@ -104,14 +110,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 				parent.getChildren().remove(item);
 				parent.getChildren().add(localIdx-1, item);
 			}
-		} else if (event.getEventType() == TreeItemCellEvent.OUTDENT) {
+		} else { //(event.getEventType() == TreeItemCellEvent.OUTDENT) {
 			TreeItem<TreeItemCellView> parent = item.getParent();
 			int localIdxOfParent = parent.getParent().getChildren().indexOf(parent);
 			parent.getParent().getChildren().add(localIdxOfParent +1, item);
 			parent.getChildren().remove(item);
-		} else if (event.getEventType() == TreeItemCellEvent.SPLIT) {
-
-		}
+		} 
 	}
 
 	private TreeItem<TreeItemCellView> findItem(TreeItemCellView source) {

@@ -36,9 +36,6 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		public static final EventType<TreeItemCellEvent> MERGEWITH_NEXT = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				BASE, "MERGEWITH_NEXT");
 
-		public static final EventType<TreeItemCellEvent> SPLIT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "SPLIT");
-
 		public static final EventType<TreeItemCellEvent> OUTDENT = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				BASE, "MOVETO_PARENT");
 
@@ -60,9 +57,19 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		public static final EventType<TreeItemCellEvent> TOGGLE_EXPAND = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				BASE, "TOGGLE_EXPAND");
 
+		private String title;
+		
 		public TreeItemCellEvent(
 				EventType<? extends TreeItemCellEvent> eventType) {
 			super(eventType);
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		
+		public String getTitle() {
+			return title;
 		}
 
 	}
@@ -134,8 +141,13 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					this.fireEvent(new TreeItemCellEvent(
 							TreeItemCellEvent.CREATE_AFTER));
 				} else {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.SPLIT));
+					int caretPosition = getTxtTitle().getCaretPosition();
+					String newText = getTxtTitle().getText().substring(caretPosition);
+					getTxtTitle().deleteText(caretPosition, getTxtTitle().getLength());
+					TreeItemCellEvent cellEvent = new TreeItemCellEvent(
+							TreeItemCellEvent.CREATE_AFTER);
+					cellEvent.setTitle(newText);
+					this.fireEvent(cellEvent);
 				}
 			} else if (evt.getCode() == KeyCode.UP) {
 				this.fireEvent(new TreeItemCellEvent(

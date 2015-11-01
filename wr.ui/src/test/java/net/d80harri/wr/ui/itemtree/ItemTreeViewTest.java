@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
@@ -82,6 +84,30 @@ public class ItemTreeViewTest extends GuiTest {
 	}
 
 	@Test
+	public void shallCreateWithTitle() {
+		TreeItem<TreeItemCellView> firstCell = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("ASDF");
+			return result;
+		});
+
+		TreeItemCellEvent event = new TreeItemCellEvent(
+				TreeItemCellEvent.CREATE_AFTER);
+		event.setTitle("JKLÖ");
+
+		runLater(() -> firstCell.getValue().fireEvent(event));
+
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
+		Assertions.assertThat(
+				view.getRootNode().getChildren().get(0).getValue()
+						.getTxtTitle().getText()).isEqualTo("ASDF");
+		Assertions.assertThat(
+				view.getRootNode().getChildren().get(1).getValue()
+						.getTxtTitle().getText()).isEqualTo("JKLÖ");
+
+	}
+
+	@Test
 	public void shallFocusFirstChildWhenCellRequestsExpand() {
 		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
 
@@ -100,6 +126,34 @@ public class ItemTreeViewTest extends GuiTest {
 						new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
 
 		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
+				.isTrue();
+
+		runLater(() -> childItem
+				.getParent()
+				.getValue()
+				.fireEvent(
+						new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
+
+		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
+				.isFalse();
+	}
+
+	@Test
+	public void expandWhenNoChildrenPresent() {
+		TreeItem<TreeItemCellView> root = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+
+			@Override
+			public TreeItem<TreeItemCellView> get() {
+				TreeItem<TreeItemCellView> root = view.createRootNode();
+				root.getValue().getTxtTitle().setText("MyRoot");
+				return root;
+			}
+		});
+
+		runLater(() -> root.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
+
+		Assertions.assertThat(root.getValue().getTxtTitle().isFocused())
 				.isTrue();
 	}
 
@@ -204,10 +258,11 @@ public class ItemTreeViewTest extends GuiTest {
 				new TreeItemCellEvent(TreeItemCellEvent.MERGEWITH_NEXT)));
 
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
-		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText()).isEqualTo("ASDFJKLÖ");
+		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText())
+				.isEqualTo("ASDFJKLÖ");
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
-	
+
 	@Test
 	public void mergeWithNextWhenNoNext() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -219,10 +274,11 @@ public class ItemTreeViewTest extends GuiTest {
 				new TreeItemCellEvent(TreeItemCellEvent.MERGEWITH_NEXT)));
 
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
-		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText()).isEqualTo("ASDF");
+		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText())
+				.isEqualTo("ASDF");
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
-	
+
 	@Test
 	public void shallMergeWithPrev() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -239,10 +295,11 @@ public class ItemTreeViewTest extends GuiTest {
 				new TreeItemCellEvent(TreeItemCellEvent.MERGEWITH_PREVIOUS)));
 
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
-		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText()).isEqualTo("ASDFJKLÖ");
+		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText())
+				.isEqualTo("ASDFJKLÖ");
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
-	
+
 	@Test
 	public void mergeWithPrevWhenNoPrev() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -254,10 +311,11 @@ public class ItemTreeViewTest extends GuiTest {
 				new TreeItemCellEvent(TreeItemCellEvent.MERGEWITH_PREVIOUS)));
 
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
-		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText()).isEqualTo("ASDF");
+		Assertions.assertThat(rootNode1.getValue().getTxtTitle().getText())
+				.isEqualTo("ASDF");
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
-	
+
 	@Test
 	public void moveDown() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -273,9 +331,10 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode1.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
 
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2).containsExactly(rootNode2, rootNode1);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
+				.containsExactly(rootNode2, rootNode1);
 	}
-	
+
 	@Test
 	public void moveLastElementDown() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -287,9 +346,10 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode1.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.MOVE_DOWN)));
 
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1).containsExactly(rootNode1);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1)
+				.containsExactly(rootNode1);
 	}
-	
+
 	@Test
 	public void moveUp() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -305,9 +365,10 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode2.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
 
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2).containsExactly(rootNode2, rootNode1);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
+				.containsExactly(rootNode2, rootNode1);
 	}
-	
+
 	@Test
 	public void moveFirstItemUp() {
 		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
@@ -319,7 +380,8 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode1.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP)));
 
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1).containsExactly(rootNode1);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1)
+				.containsExactly(rootNode1);
 	}
 
 	@Test

@@ -37,6 +37,14 @@ public class TreeItemCellViewTest extends GuiTest {
 	public void userWantsToAddASiblingItemUsingTheKeyboard() {
 		shortCutHelper(TreeItemCellEvent.CREATE_AFTER, KeyCode.ENTER);
 	}
+	
+	@Test
+	public void userWantsToSplit() {
+		shortCutHelper(TreeItemCellEvent.CREATE_AFTER, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("ASDF").type(KeyCode.LEFT).type(KeyCode.LEFT)
+				.type(KeyCode.ENTER));
+		
+		Assertions.assertThat(view.getTxtTitle().getText()).isEqualTo("AS");
+	}
 
 	@Test
 	public void userWantsToNavigateToPrevious() {
@@ -113,12 +121,6 @@ public class TreeItemCellViewTest extends GuiTest {
 	@Test
 	public void userWantsToExpandNode() {
 		shortCutHelper(TreeItemCellEvent.TOGGLE_EXPAND, KeyCode.CONTROL, KeyCode.SPACE);
-	}
-	
-	@Test
-	public void userWantsToSplit() {
-		shortCutHelper(TreeItemCellEvent.SPLIT, () -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(KeyCode.LEFT)
-				.type(KeyCode.ENTER));
 	}
 	
 	@Test
