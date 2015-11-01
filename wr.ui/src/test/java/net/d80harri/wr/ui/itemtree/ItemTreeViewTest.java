@@ -35,11 +35,17 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallCreateNewRootNode() {
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
-				.createRootNode());
+		TreeItem<TreeItemCellView> newCell = computeLater(() -> {
+			TreeItem<TreeItemCellView> result = view.createRootNode();
+			result.getValue().getTxtTitle().setText("Root");
+			return result;
+		});
 
 		Assertions.assertThat(view.getItemTree().getRoot().getChildren())
 				.hasSize(1).contains(newCell);
+		Assertions.assertThat(newCell.getChildren()).hasSize(0);
+		Assertions.assertThat(newCell.getParent())
+				.isEqualTo(view.getRootNode());
 	}
 
 	@Test
@@ -393,8 +399,11 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode2.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.OUTDENT)));
 
+		Assertions.assertThat(rootNode1.getParent()).isEqualTo(view.getRootNode());
+		Assertions.assertThat(rootNode2.getParent()).isEqualTo(view.getRootNode());
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
+				.containsExactly(rootNode1, rootNode2);
 	}
 
 	private <T> T computeLater(final Supplier<T> supplier) {
