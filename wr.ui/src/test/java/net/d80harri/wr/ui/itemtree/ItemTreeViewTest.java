@@ -246,6 +246,17 @@ public class ItemTreeViewTest extends GuiTest {
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(1);
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 	}
+	
+	@Test
+	public void indentFirstChild() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view
+				.createRootNode());
+		runLater(() -> rootNode1.getValue().fireEvent(
+				new TreeItemCellEvent(TreeItemCellEvent.INDENT)));
+
+		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
+		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
+	}
 
 	@Test
 	public void shallMergeWithNext() {

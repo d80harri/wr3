@@ -94,11 +94,13 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 			item.getParent().getChildren().remove(item);
 		} else if (event.getEventType() == TreeItemCellEvent.INDENT) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
-			TreeItem<TreeItemCellView> previous = item.getParent()
-					.getChildren().get(localIdx - 1);
-			item.getParent().getChildren().remove(item);
-			previous.getChildren().add(item);
-			previous.setExpanded(true);
+			if (localIdx > 0) {
+				TreeItem<TreeItemCellView> previous = item.getParent()
+						.getChildren().get(localIdx - 1);
+				item.getParent().getChildren().remove(item);
+				previous.getChildren().add(item);
+				previous.setExpanded(true);
+			}
 		} else if (event.getEventType() == TreeItemCellEvent.MERGEWITH_NEXT) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx + 1 != item.getParent().getChildren().size()) {
