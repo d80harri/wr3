@@ -50,7 +50,7 @@
 		</left>
 		<bottom>
 			<StackPane fx:id="detailPane" >
-				<FittingHeightTextArea  fx:id="descriptionArea" 
+				<FittingHeightTextArea  fx:id="descriptionArea" id="description" 
 					promptText="Enter a description"
 					styleClass="input-label"/>
 			</StackPane>

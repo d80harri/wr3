@@ -86,6 +86,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
+		detailPane.addEventFilter(KeyEvent.KEY_PRESSED, this::detail_KeyPressed);
 		detailPane.managedProperty().bind(detailVisibleProperty());
 		detailPane.visibleProperty().bind(detailVisibleProperty());
 
@@ -108,6 +109,15 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		return txtTitle;
 	}
 
+	private void detail_KeyPressed(KeyEvent evt) {
+		if (evt.isShiftDown()) {
+			if (evt.getCode() == KeyCode.ENTER) {
+				txtTitle.requestFocus();
+				setDetailVisible(false);
+			}
+		}
+	}
+	
 	private void txtTitle_KeyPressed(KeyEvent evt) {
 		if (evt.isControlDown()) {
 			if (evt.getCode() == KeyCode.SPACE) {

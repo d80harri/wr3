@@ -1,17 +1,16 @@
 package net.d80harri.wr.ui.itemtree;
 
-import static net.d80harri.wr.ui.util.TestUtilMethods.computeLater;
 import static net.d80harri.wr.ui.util.TestUtilMethods.runLater;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Parent;
-import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.runner.notification.RunListener;
 import org.loadui.testfx.GuiTest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -215,18 +214,27 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void detailVisiblePropertyBinding() {		
+	public void shallHideDetailWhenInDetail() {
+		runLater(() -> {
+			view.setDetailVisible(true);
+			view.getDescriptionArea().getTextArea().requestFocus();
+		});
+		type(KeyCode.SHIFT, KeyCode.ENTER);
+		Assertions.assertThat(view.getDetailPane().isVisible()).isFalse();
+		Assertions.assertThat(view.getTxtTitle().isFocused()).isTrue();
+	}
+
+	@Test
+	public void detailVisiblePropertyBinding() {
 		runLater(() -> view.setDetailVisible(true));
 
 		Assertions.assertThat(view.isDetailVisible()).isTrue();
-		Assertions.assertThat(view.getDetailPane().isVisible())
-				.isTrue();
+		Assertions.assertThat(view.getDetailPane().isVisible()).isTrue();
 
 		runLater(() -> view.setDetailVisible(false));
 
 		Assertions.assertThat(view.isDetailVisible()).isFalse();
-		Assertions.assertThat(view.getDetailPane().isVisible())
-				.isFalse();
+		Assertions.assertThat(view.getDetailPane().isVisible()).isFalse();
 	}
 
 	private void shortCutHelper(EventType<TreeItemCellEvent> event,
