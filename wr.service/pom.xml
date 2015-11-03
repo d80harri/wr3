@@ -1,37 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>wr.ui</artifactId>
-
 	<parent>
 		<groupId>net.d80harri.wr</groupId>
 		<artifactId>wr-module</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+	<artifactId>wr.service</artifactId>
 
 	<dependencies>
 		<dependency>
-			<artifactId>wr.service</artifactId>
 			<groupId>net.d80harri.wr</groupId>
+			<artifactId>wr.db</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.controlsfx</groupId>
-			<artifactId>controlsfx</artifactId>
-			<version>8.40.10</version>
-		</dependency>
-		<dependency>
-			<groupId>org.fxmisc.easybind</groupId>
-			<artifactId>easybind</artifactId>
-			<version>1.0.0</version>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>1.5.0-beta0</version>
 		</dependency>
 
 
-
 		<dependency>
-			<groupId>org.loadui</groupId>
-			<artifactId>testFx</artifactId>
-			<version>3.1.0</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -46,12 +40,12 @@
 			<version>3.2.0</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>
