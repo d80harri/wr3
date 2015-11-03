@@ -124,6 +124,9 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				this.fireEvent(new TreeItemCellEvent(
 						TreeItemCellEvent.TOGGLE_EXPAND));
 				evt.consume();
+			} else if (evt.getCode() == KeyCode.D) {
+				this.fireEvent(new TreeItemCellEvent(
+						TreeItemCellEvent.DELETE));
 			}
 		} else if (evt.isShiftDown()) {
 			if (evt.getCode() == KeyCode.TAB) {

@@ -145,6 +145,14 @@ public class TreeItemCellViewTest extends GuiTest {
 				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(
 						KeyCode.DELETE));
 	}
+	
+	@Test
+	public void userWantsToDeleteWithCtrD() {
+		shortCutHelper(
+				TreeItemCellEvent.DELETE,
+				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(
+						KeyCode.CONTROL, KeyCode.D));
+	}
 
 	@Test
 	public void userWantsToMergeItemWithNext() {
