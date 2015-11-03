@@ -10,7 +10,6 @@ import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.notification.RunListener;
 import org.loadui.testfx.GuiTest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -100,6 +99,7 @@ public class TreeItemCellViewTest extends GuiTest {
 		shortCutHelper(TreeItemCellEvent.OUTDENT,
 				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
 						.type(KeyCode.END).type(KeyCode.SHIFT, KeyCode.TAB));
+		Assertions.assertThat(view.getTxtTitle().isFocused()).isTrue();
 	}
 
 	@Test
@@ -121,6 +121,8 @@ public class TreeItemCellViewTest extends GuiTest {
 		shortCutHelper(TreeItemCellEvent.INDENT,
 				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
 						.type(KeyCode.END).type(KeyCode.TAB));
+
+		Assertions.assertThat(view.getTxtTitle().isFocused()).isTrue();
 	}
 
 	@Test

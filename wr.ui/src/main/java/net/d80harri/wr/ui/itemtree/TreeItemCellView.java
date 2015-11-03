@@ -195,6 +195,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				}
 			}
 		}
+		evt.consume();
 	}
 
 	public Pane getDetailPane() {
