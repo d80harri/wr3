@@ -18,11 +18,6 @@ public class AppView extends ViewBase<AppPresenter> implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 	}
 	
-	@Override
-	protected void registerHandlers() {
-		// TODO Auto-generated method stub
-	}
-	
 	@FXML
 	private void addEventHandler(ActionEvent event) {
 		itemTreeView.createRootNode();

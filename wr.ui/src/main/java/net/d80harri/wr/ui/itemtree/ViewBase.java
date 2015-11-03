@@ -1,8 +1,6 @@
 package net.d80harri.wr.ui.itemtree;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
@@ -29,10 +27,7 @@ public abstract class ViewBase<P> extends AnchorPane {
 
 	public ViewBase() {
 		loadFxml();
-		registerHandlers();
 	}
-
-	protected abstract void registerHandlers();
 
 	protected void loadFxml() {
 		String location = getClass().getSimpleName() + ".fxml";

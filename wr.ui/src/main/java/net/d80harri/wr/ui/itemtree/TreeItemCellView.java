@@ -6,12 +6,14 @@ import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 
@@ -23,7 +25,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 
 		public static final EventType<TreeItemCellEvent> BASE = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				"BASE");
-		
+
 		public static final EventType<TreeItemCellEvent> INDENT = new EventType<TreeItemCellView.TreeItemCellEvent>(
 				BASE, "MOVETO_CHILD_OF_PREVIOUS");
 
@@ -58,7 +60,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				BASE, "TOGGLE_EXPAND");
 
 		private String title;
-		
+
 		public TreeItemCellEvent(
 				EventType<? extends TreeItemCellEvent> eventType) {
 			super(eventType);
@@ -67,7 +69,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		public void setTitle(String title) {
 			this.title = title;
 		}
-		
+
 		public String getTitle() {
 			return title;
 		}
@@ -81,25 +83,24 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 	@FXML
 	private FittingHeightTextArea descriptionArea;
 
-	private BooleanProperty detailVisible;
-
-	@Override
-	protected void registerHandlers() {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		detailVisible = new SimpleBooleanProperty(false);
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
-		detailPane.managedProperty().bind(detailVisible);
-		detailPane.visibleProperty().bind(detailVisible);
+		detailPane.managedProperty().bind(detailVisibleProperty());
+		detailPane.visibleProperty().bind(detailVisibleProperty());
+
+		this.addEventFilter(MouseEvent.MOUSE_CLICKED,
+				new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent evt) {
+						setActivated(true);
+					};
+				});
 	}
 
 	@Override
 	protected void layoutChildren() {
 		super.layoutChildren();
+
 		txtTitle.resize(getWidth(), getHeight());
 	}
 
@@ -115,25 +116,21 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 			}
 		} else if (evt.isShiftDown()) {
 			if (evt.getCode() == KeyCode.TAB) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.OUTDENT));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT));
 			} else if (evt.getCode() == KeyCode.ENTER) {
-				detailVisible.set(!detailVisible.get());
+				setDetailVisible(!isDetailVisible());
 				descriptionArea.requestFocus();
 			}
 		} else if (evt.isAltDown()) {
 			if (evt.getCode() == KeyCode.UP) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.MOVE_UP));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP));
 			} else if (evt.getCode() == KeyCode.DOWN) {
 				this.fireEvent(new TreeItemCellEvent(
 						TreeItemCellEvent.MOVE_DOWN));
 			} else if (evt.getCode() == KeyCode.RIGHT) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.INDENT));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
 			} else if (evt.getCode() == KeyCode.LEFT) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.OUTDENT));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT));
 			}
 		} else {
 			if (evt.getCode() == KeyCode.ENTER) {
@@ -142,8 +139,10 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 							TreeItemCellEvent.CREATE_AFTER));
 				} else {
 					int caretPosition = getTxtTitle().getCaretPosition();
-					String newText = getTxtTitle().getText().substring(caretPosition);
-					getTxtTitle().deleteText(caretPosition, getTxtTitle().getLength());
+					String newText = getTxtTitle().getText().substring(
+							caretPosition);
+					getTxtTitle().deleteText(caretPosition,
+							getTxtTitle().getLength());
 					TreeItemCellEvent cellEvent = new TreeItemCellEvent(
 							TreeItemCellEvent.CREATE_AFTER);
 					cellEvent.setTitle(newText);
@@ -156,8 +155,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				this.fireEvent(new TreeItemCellEvent(
 						TreeItemCellEvent.GOTO_NEXT));
 			} else if (evt.getCode() == KeyCode.TAB) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.INDENT));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
 			} else if (evt.getCode() == KeyCode.BACK_SPACE) {
 				if (txtTitle.getText().isEmpty()) {
 					this.fireEvent(new TreeItemCellEvent(
@@ -189,21 +187,60 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		}
 	}
 
-	public void visit() {
-		txtTitle.requestFocus();
-		txtTitle.positionCaret(0);
-	}
-
-	public void go() {
-		this.detailVisible.set(false);
-	}
-
 	public Pane getDetailPane() {
 		return detailPane;
 	}
 
 	public FittingHeightTextArea getDescriptionArea() {
 		return descriptionArea;
+	}
+
+	/*
+	 * =======================================================================
+	 * == PROPERTIES ==
+	 * =======================================================================
+	 */
+
+	private BooleanProperty detailVisible;
+	
+	public final BooleanProperty detailVisibleProperty() {
+		if (detailVisible == null) {
+			detailVisible = new SimpleBooleanProperty(false);
+		}
+		return this.detailVisible;
+	}
+
+	public final boolean isDetailVisible() {
+		return this.detailVisibleProperty().get();
+	}
+
+	public final void setDetailVisible(final boolean detailVisible) {
+		this.detailVisibleProperty().set(detailVisible);
+	}
+
+	private BooleanProperty activated;
+	
+	public final BooleanProperty activatedProperty() {
+		if (activated == null) {
+			activated = new SimpleBooleanProperty(false);
+			activated.addListener((obs, o, n) -> {
+				if (n) {
+					txtTitle.requestFocus();
+					txtTitle.positionCaret(0);
+				} else {
+					setDetailVisible(false);
+				}
+			});
+		}
+		return this.activated;
+	}
+
+	public final boolean isActivated() {
+		return this.activatedProperty().get();
+	}
+
+	public final void setActivated(final boolean activated) {
+		this.activatedProperty().set(activated);
 	}
 
 }

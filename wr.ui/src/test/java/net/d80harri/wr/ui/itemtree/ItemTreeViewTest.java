@@ -1,11 +1,10 @@
 package net.d80harri.wr.ui.itemtree;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import static net.d80harri.wr.ui.util.TestUtilMethods.computeLater;
+import static net.d80harri.wr.ui.util.TestUtilMethods.runLater;
+
 import java.util.function.Supplier;
 
-import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
@@ -115,21 +114,21 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallFocusFirstChildWhenCellRequestsExpand() {
-		TreeItem<TreeItemCellView> childItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
-
-			@Override
-			public TreeItem<TreeItemCellView> get() {
-				TreeItem<TreeItemCellView> root = view.createRootNode();
-				root.getValue().getTxtTitle().setText("MyRoot");
-				return view.createItemAt(root, 0);
-			}
+		TreeItem<TreeItemCellView> childItem = computeLater(() -> {
+			TreeItem<TreeItemCellView> root = view.createRootNode();
+			root.getValue().getTxtTitle().setText("MyRoot");
+			return view.createItemAt(root, 0);
 		});
 
-		runLater(() -> childItem
-				.getParent()
-				.getValue()
-				.fireEvent(
-						new TreeItemCellEvent(TreeItemCellEvent.TOGGLE_EXPAND)));
+		runLater(() -> {
+			view.setActiveCell(childItem.getParent().getValue());
+			childItem
+					.getParent()
+					.getValue()
+					.fireEvent(
+							new TreeItemCellEvent(
+									TreeItemCellEvent.TOGGLE_EXPAND));
+		});
 
 		Assertions.assertThat(childItem.getValue().getTxtTitle().isFocused())
 				.isTrue();
@@ -399,34 +398,48 @@ public class ItemTreeViewTest extends GuiTest {
 		runLater(() -> rootNode2.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.OUTDENT)));
 
-		Assertions.assertThat(rootNode1.getParent()).isEqualTo(view.getRootNode());
-		Assertions.assertThat(rootNode2.getParent()).isEqualTo(view.getRootNode());
+		Assertions.assertThat(rootNode1.getParent()).isEqualTo(
+				view.getRootNode());
+		Assertions.assertThat(rootNode2.getParent()).isEqualTo(
+				view.getRootNode());
 		Assertions.assertThat(rootNode1.getChildren()).hasSize(0);
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
 				.containsExactly(rootNode1, rootNode2);
 	}
 
-	private <T> T computeLater(final Supplier<T> supplier) {
-		final FutureTask<T> query = new FutureTask<>(new Callable<T>() {
-			@Override
-			public T call() throws Exception {
-				return supplier.get();
-			}
-		});
+	@Test
+	public void activateOtherCell() {
+		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view
+				.createRootNode());
+		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> view
+				.createRootNode());
 
-		Platform.runLater(query);
+		click(rootNode1.getValue().getTxtTitle(), MouseButton.PRIMARY).type(
+				KeyCode.SHIFT, KeyCode.ENTER);
 
-		try {
-			return query.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new Error(e.getMessage(), e);
-		}
+		Assertions.assertThat(rootNode1.getValue().getDetailPane().isVisible())
+				.isTrue();
+		Assertions.assertThat(rootNode2.getValue().getDetailPane().isVisible())
+				.isFalse();
+
+		click(rootNode2.getValue().getTxtTitle(), MouseButton.PRIMARY);
+		Assertions.assertThat(rootNode1.getValue().getDetailPane().isVisible())
+				.isFalse();
+		Assertions.assertThat(rootNode2.getValue().getDetailPane().isVisible())
+				.isFalse();
 	}
-
-	private void runLater(final Runnable callback) {
-		computeLater(() -> {
-			callback.run();
-			return null;
-		});
+	
+	@Test
+	public void activePropertyBinding() {
+		TreeItem<TreeItemCellView> rootNode = computeLater(() -> view
+				.createRootNode());
+		
+		runLater(() -> rootNode.getValue().setActivated(true));
+		
+		Assertions.assertThat(view.getActiveCell()).isEqualTo(rootNode.getValue());
+		
+		runLater(() -> rootNode.getValue().setActivated(false));
+		
+		Assertions.assertThat(view.getActiveCell()).isNull();
 	}
 }

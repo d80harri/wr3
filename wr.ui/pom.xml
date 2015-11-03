@@ -25,6 +25,12 @@
 			<artifactId>controlsfx</artifactId>
 			<version>8.40.10</version>
 		</dependency>
+		<dependency>
+			<groupId>org.fxmisc.easybind</groupId>
+			<artifactId>easybind</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 
 
 		<dependency>

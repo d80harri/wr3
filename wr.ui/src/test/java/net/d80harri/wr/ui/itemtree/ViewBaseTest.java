@@ -11,11 +11,6 @@ public class ViewBaseTest {
 	}
 	public static class ViewWithoutFxml extends ViewBase<PresenterForViewWithoutFxml> {
 
-		@Override
-		protected void registerHandlers() {
-			
-		}
-		
 	}
 	@Test(expected=ViewBase.FxmlDoesNotExistException.class)
 	public void shouldThrowExceptionIfFxmlDoesNotExist() {
