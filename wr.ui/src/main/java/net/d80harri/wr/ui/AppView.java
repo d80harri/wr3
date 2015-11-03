@@ -6,8 +6,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import net.d80harri.wr.ui.core.ViewBase;
 import net.d80harri.wr.ui.itemtree.IItemTreeView;
-import net.d80harri.wr.ui.itemtree.ViewBase;
 
 public class AppView extends ViewBase<AppPresenter> implements Initializable {
 

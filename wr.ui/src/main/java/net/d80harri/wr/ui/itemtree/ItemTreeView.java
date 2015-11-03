@@ -9,7 +9,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.core.ViewBase;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView.TreeItemCellEvent;
 
 public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		IItemTreeView, Initializable {
@@ -187,12 +189,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		return this.activeCell;
 	}
 
-	public final net.d80harri.wr.ui.itemtree.TreeItemCellView getActiveCell() {
+	public final net.d80harri.wr.ui.itemtree.cell.TreeItemCellView getActiveCell() {
 		return this.activeCellProperty().get();
 	}
 
 	public final void setActiveCell(
-			final net.d80harri.wr.ui.itemtree.TreeItemCellView activeCell) {
+			final net.d80harri.wr.ui.itemtree.cell.TreeItemCellView activeCell) {
 		this.activeCellProperty().set(activeCell);
 	}
 

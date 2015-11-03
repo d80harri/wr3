@@ -1,4 +1,4 @@
-package net.d80harri.wr.ui.itemtree;
+package net.d80harri.wr.ui.itemtree.cell;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,9 +16,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
+import net.d80harri.wr.ui.core.ViewBase;
 
-public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
-		Initializable {
+public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter> implements
+		Initializable, ITreeItemCellView {
 
 	public static class TreeItemCellEvent extends Event {
 		private static final long serialVersionUID = 3699285621625278032L;

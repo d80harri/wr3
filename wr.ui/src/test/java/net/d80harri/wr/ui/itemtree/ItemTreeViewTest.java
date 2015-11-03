@@ -9,7 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import net.d80harri.wr.ui.itemtree.TreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView.TreeItemCellEvent;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
