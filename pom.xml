@@ -6,7 +6,39 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<properties>
+		<org.springframework-version>4.2.1.RELEASE</org.springframework-version>
+		<org.hibernate-version>4.3.11.Final</org.hibernate-version>
+	</properties>
+	<distributionManagement>
+		<!-- We must specify this minimal site distribution to enable site deployment 
+			to a staging location. Staging the site enables us to test the links between 
+			maven modules. This configuration below will deploy the site to ./target/staging -->
+		<site>
+			<id>site</id>
+			<url>http://www.d80harri.net/wr</url>
+		</site>
+	</distributionManagement>
+
 	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<testFailureIgnore>true</testFailureIgnore>
+							<aggregate>true</aggregate>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -16,13 +48,37 @@
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
-						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.11</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</reporting>
+
 	<modules>
 		<module>wr.db</module>
 		<module>wr.db.test-utils</module>

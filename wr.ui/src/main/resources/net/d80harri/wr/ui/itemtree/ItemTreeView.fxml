@@ -19,10 +19,12 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeView?>
 
-
-<AnchorPane id="AnchorPane"
-	styleClass="airpad" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="net.d80harri.wr.ui.AppPresenter">
-	<AnchorPane fx:id="itemTreePane" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" />
-</AnchorPane>
+<fx:root fx:id="root" type="AnchorPane" AnchorPane.leftAnchor="0"
+	AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
+	AnchorPane.bottomAnchor="0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<TreeView fx:id="itemTree" prefWidth="${root.width}"
+		prefHeight="${root.height}" showRoot="false" />
+</fx:root>

@@ -1,7 +1,26 @@
 package net.d80harri.wr.ui;
 
-import com.airhacks.afterburner.views.SpringFxView;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class AppView extends SpringFxView {
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import net.d80harri.wr.ui.itemtree.IItemTreeView;
+import net.d80harri.wr.ui.itemtree.ViewBase;
+
+public class AppView extends ViewBase<AppPresenter> implements Initializable {
+
+	@FXML
+	private IItemTreeView itemTreeView;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	}
+	
+	@FXML
+	private void addEventHandler(ActionEvent event) {
+		itemTreeView.createRootNode();
+	}
 	
 }

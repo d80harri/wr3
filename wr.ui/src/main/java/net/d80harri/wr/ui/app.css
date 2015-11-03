@@ -1,0 +1,22 @@
+.input-label {
+	-fx-background-color: transparent;
+}
+
+.tree-disclosure-node .arrow {
+	-fx-pref-width: 18px;
+	-fx-pref-height: 18px;
+}
+
+.text-field {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+}
+.text-field:focused {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+}
+
+.text-area {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+}
+.text-area:focused {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+}
