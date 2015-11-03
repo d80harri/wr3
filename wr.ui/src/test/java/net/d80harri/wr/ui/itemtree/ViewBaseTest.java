@@ -1,7 +1,5 @@
 package net.d80harri.wr.ui.itemtree;
 
-import net.d80harri.wr.ui.itemtree.ViewBase;
-
 import org.junit.Test;
 
 public class ViewBaseTest {
