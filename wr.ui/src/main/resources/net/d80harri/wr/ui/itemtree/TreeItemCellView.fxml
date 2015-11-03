@@ -27,33 +27,37 @@
 <?import javafx.scene.layout.StackPane?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <?import net.d80harri.wr.ui.components.FittingHeightTextArea?>
+<?import javafx.scene.layout.GridPane?>
 
 <fx:root fx:id="root" type="javafx.scene.layout.Pane" id="item"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<BorderPane prefWidth="${root.width}" >
-		<center>
-			<TextField fx:id="txtTitle"
-				promptText="Enter a title"
-				style="-fx-fon-size:20px"
-				styleClass="input-label">
+	<GridPane prefWidth="${root.width}">
+		<Button style="-fx-background-color:transparent"
+			GridPane.columnIndex="0" GridPane.rowIndex="0">
+			<graphic>
+				<Glyph fontFamily="FontAwesome" icon="DOT_CIRCLE_ALT"
+					fontSize="25" />
+			</graphic>
+		</Button>
+
+		<TextField fx:id="txtTitle" GridPane.columnIndex="1"
+			GridPane.rowIndex="0" promptText="Enter a title" style="-fx-fon-size:20px"
+			styleClass="input-label">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</TextField>
+
+		<StackPane fx:id="detailPane" GridPane.columnIndex="1"
+			GridPane.rowIndex="1">
+			<FittingHeightTextArea fx:id="descriptionArea"
+				id="description" promptText="Enter a description" styleClass="input-label">
 				<font>
-					<Font size="18.0" />
+					<Font size="14.0" />
 				</font>
-			</TextField>
-		</center>
-		<left>
-			<Button style="-fx-background-color:transparent">
-				<graphic>
-					<Glyph fontFamily="FontAwesome" icon="DOT_CIRCLE_ALT" fontSize="25"/>
-				</graphic>
-			</Button>
-		</left>
-		<bottom>
-			<StackPane fx:id="detailPane" >
-				<FittingHeightTextArea  fx:id="descriptionArea" id="description" 
-					promptText="Enter a description"
-					styleClass="input-label"/>
-			</StackPane>
-		</bottom>
-	</BorderPane>
+			</FittingHeightTextArea>
+		</StackPane>
+	</GridPane>
+
+
 </fx:root>

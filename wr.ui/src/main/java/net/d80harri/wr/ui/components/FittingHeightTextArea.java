@@ -1,11 +1,11 @@
 package net.d80harri.wr.ui.components;
 
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.StackPaneBuilder;
+import javafx.scene.text.Font;
 
 public class FittingHeightTextArea extends StackPane {
 	private Label label;
@@ -141,5 +142,18 @@ public class FittingHeightTextArea extends StackPane {
 	public void setPromptText(String value) {
 		promptTextProperty().set(value);
 	}
+	
+	public final ObjectProperty<Font> fontProperty() {
+		return textArea.fontProperty();
+	}
+
+	public final javafx.scene.text.Font getFont() {
+		return this.fontProperty().get();
+	}
+
+	public final void setFont(final javafx.scene.text.Font font) {
+		this.fontProperty().set(font);
+	}
+	
 
 }
