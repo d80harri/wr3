@@ -9,7 +9,7 @@ import javafx.fxml.Initializable;
 import net.d80harri.wr.ui.core.ViewBase;
 import net.d80harri.wr.ui.itemtree.IItemTreeView;
 
-public class AppView extends ViewBase<AppPresenter> implements Initializable {
+public class AppView extends ViewBase<AppPresenter, AppView> implements Initializable {
 
 	@FXML
 	private IItemTreeView itemTreeView;

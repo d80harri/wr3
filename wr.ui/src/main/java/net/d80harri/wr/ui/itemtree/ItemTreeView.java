@@ -13,7 +13,7 @@ import net.d80harri.wr.ui.core.ViewBase;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView.TreeItemCellEvent;
 
-public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
+public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> implements
 		IItemTreeView, Initializable {
 
 	@FXML

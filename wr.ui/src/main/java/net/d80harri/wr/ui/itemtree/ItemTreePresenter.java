@@ -1,6 +1,8 @@
 package net.d80harri.wr.ui.itemtree;
 
-public class ItemTreePresenter {
+import net.d80harri.wr.ui.core.IPresenter;
+
+public class ItemTreePresenter implements IPresenter<IItemTreeView> {
 
 	private IItemTreeView view;
 	

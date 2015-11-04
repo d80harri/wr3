@@ -1,21 +1,43 @@
 package net.d80harri.wr.ui.core;
 
-public class PresenterBase<T, V extends IView> implements IPresenter<T, V> {
-	private final T model;
-	private final V view;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
+public class PresenterBase<T, V extends IView> implements IPresenter<V> {
+	private ObjectProperty<T> model;
+	private V view;
+	
+	public PresenterBase(T model) {
+		setModel(model);
+	}
 	
 	public PresenterBase(T model, V view) {
-		this.model = model;
+		setModel(model);
 		this.view = view;
 		view.setPresenter(this);
 	}
 	
-	public T getModel() {
+	public ObjectProperty<T> modelProperty() {
+		if (model == null) {
+			model = new SimpleObjectProperty<>();
+		}
 		return model;
+	}
+	
+	public T getModel() {
+		return modelProperty().get();
+	}
+	
+	public void setModel(T value) {
+		modelProperty().set(value);
 	}
 	
 	public V getView() {
 		return view;
+	}
+	
+	public void setView(V view) {
+		this.view = view;
 	}
 	
 }

@@ -1,5 +1,9 @@
 package net.d80harri.wr.ui.itemtree.cell;
 
-public interface ITreeItemCellPresenter {
+import net.d80harri.wr.ui.core.IPresenter;
+
+public interface ITreeItemCellPresenter extends IPresenter<ITreeItemCellView>{
+
+	void saveOrUpdate();
 
 }

@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -18,7 +19,7 @@ import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import net.d80harri.wr.ui.core.ViewBase;
 
-public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter> implements
+public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItemCellView> implements
 		Initializable, ITreeItemCellView {
 
 	public static class TreeItemCellEvent extends Event {
@@ -261,6 +262,7 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter> implement
 					txtTitle.positionCaret(0);
 				} else {
 					setDetailVisible(false);
+					getPresenter().saveOrUpdate();
 				}
 			});
 		}
@@ -273,6 +275,11 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter> implement
 
 	public final void setActivated(final boolean activated) {
 		this.activatedProperty().set(activated);
+	}
+
+	@Override
+	public StringProperty titleProperty() {
+		return txtTitle.textProperty();
 	}
 
 }
