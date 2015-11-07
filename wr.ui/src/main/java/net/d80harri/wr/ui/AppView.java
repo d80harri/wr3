@@ -11,16 +11,20 @@ import net.d80harri.wr.ui.itemtree.IItemTreeView;
 
 public class AppView extends ViewBase<AppPresenter, AppView> implements Initializable {
 
+	public AppView(AppPresenter presenter) {
+		super(presenter);
+	}
+
 	@FXML
 	private IItemTreeView itemTreeView;
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	}
-	
+
 	@FXML
 	private void addEventHandler(ActionEvent event) {
 		itemTreeView.createRootNode();
 	}
-	
+
 }

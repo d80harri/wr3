@@ -85,6 +85,10 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 	@FXML
 	private FittingHeightTextArea descriptionArea;
 
+	public TreeItemCellView(ITreeItemCellPresenter presenter) {
+		super(presenter);
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);

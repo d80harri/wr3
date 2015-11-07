@@ -1,10 +1,8 @@
 package net.d80harri.wr.ui.core;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.net.URL;
 
-import net.d80harri.wr.ui.itemtree.ItemTreeView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -15,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
  * @param <P>
  *            the type of the presenter
  */
-public abstract class ViewBase<P extends IPresenter<ME>, ME extends IView<P>> extends AnchorPane implements IView<P> {
+public abstract class ViewBase<P extends IPresenter<ME, P>, ME extends IView<P, ME>> extends AnchorPane implements IView<P, ME> {
 
 	public static class FxmlDoesNotExistException extends RuntimeException {
 		private static final long serialVersionUID = -7287130651184888316L;
@@ -26,10 +24,12 @@ public abstract class ViewBase<P extends IPresenter<ME>, ME extends IView<P>> ex
 
 	}
 
-	protected P presenter;
+	protected final P presenter;
 
-	public ViewBase() {
+	public ViewBase(P presenter) {
 		loadFxml();
+		this.presenter = presenter;
+		this.presenter.setView((ME)this);
 	}
 
 	protected void loadFxml() {
@@ -49,17 +49,7 @@ public abstract class ViewBase<P extends IPresenter<ME>, ME extends IView<P>> ex
 		}
 	}
 
-	public void setPresenter(P presenter) {
-		this.presenter = presenter;
-	}
-
 	public P getPresenter() {
-		if (presenter == null) {
-			Class clazz = (Class)
-			   ((ParameterizedType)getClass().getGenericSuperclass())
-			      .getActualTypeArguments()[0];
-			presenter = (P)WrUiAppContext.get().getBean(clazz, this);
-		}
 		return presenter;
 	}
 	

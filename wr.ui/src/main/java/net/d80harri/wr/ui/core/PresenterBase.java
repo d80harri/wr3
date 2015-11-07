@@ -3,7 +3,7 @@ package net.d80harri.wr.ui.core;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class PresenterBase<T, V extends IView> implements IPresenter<V> {
+public class PresenterBase<T, V extends IView<ME, V>, ME extends IPresenter<V, ME>> implements IPresenter<V, ME> {
 	private ObjectProperty<T> model;
 	private V view;
 	
@@ -14,7 +14,6 @@ public class PresenterBase<T, V extends IView> implements IPresenter<V> {
 	public PresenterBase(T model, V view) {
 		setModel(model);
 		this.view = view;
-		view.setPresenter(this);
 	}
 	
 	public ObjectProperty<T> modelProperty() {

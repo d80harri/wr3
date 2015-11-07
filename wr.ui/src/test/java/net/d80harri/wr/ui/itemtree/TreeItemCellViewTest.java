@@ -27,8 +27,7 @@ public class TreeItemCellViewTest extends GuiTest {
 	@Override
 	protected Parent getRootNode() {
 		MockitoAnnotations.initMocks(this);
-		view = new TreeItemCellView();
-		view.setPresenter(presenter);
+		view = new TreeItemCellView(presenter);
 
 		return view;
 	}

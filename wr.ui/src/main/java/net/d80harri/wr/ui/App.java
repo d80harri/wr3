@@ -8,7 +8,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-    	AppView appView = new AppView();
+    	AppView appView = new AppView(new AppPresenter(null));
         Scene scene = new Scene(appView);
         stage.setTitle("White rabbit v0.0.1");
         stage.setScene(scene);

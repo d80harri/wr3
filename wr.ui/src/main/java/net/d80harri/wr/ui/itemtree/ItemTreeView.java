@@ -2,6 +2,7 @@ package net.d80harri.wr.ui.itemtree;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.d80harri.wr.ui.core.ViewBase;
+import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView.TreeItemCellEvent;
 
@@ -19,7 +21,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 	@FXML
 	private TreeView<TreeItemCellView> itemTree;
 	private TreeItem<TreeItemCellView> rootNode;
+	private Supplier<ITreeItemCellPresenter> treeItemCellPresenterFactory;
 
+	public ItemTreeView(ItemTreePresenter presenter, Supplier<ITreeItemCellPresenter> treeItemCellPresenterFactory) {
+		super(presenter);
+		this.treeItemCellPresenterFactory = treeItemCellPresenterFactory;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -39,7 +46,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 	@Override
 	public TreeItem<TreeItemCellView> createItemAt(
 			TreeItem<TreeItemCellView> parent, int indexOfItem) {
-		TreeItemCellView resultCell = new TreeItemCellView();
+		TreeItemCellView resultCell = new TreeItemCellView(treeItemCellPresenterFactory.get());
 		TreeItem<TreeItemCellView> resultTreeItem = new TreeItem<TreeItemCellView>(
 				resultCell);
 		resultCell.addEventHandler(TreeItemCellView.TreeItemCellEvent.BASE,

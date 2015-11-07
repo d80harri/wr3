@@ -4,7 +4,7 @@ import net.d80harri.wr.ui.core.IView;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 import javafx.scene.control.TreeItem;
 
-public interface IItemTreeView extends IView<ItemTreePresenter> {
+public interface IItemTreeView extends IView<ItemTreePresenter, IItemTreeView> {
 
 	public abstract TreeItem<TreeItemCellView> createItemAt(TreeItem<TreeItemCellView> parent, int indexOfItem);
 

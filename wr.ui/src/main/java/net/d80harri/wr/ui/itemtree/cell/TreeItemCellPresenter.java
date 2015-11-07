@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TreeItemCellPresenter extends PresenterBase<ItemDto, ITreeItemCellView> implements ITreeItemCellPresenter {
+public class TreeItemCellPresenter extends PresenterBase<ItemDto, ITreeItemCellView, ITreeItemCellPresenter> implements ITreeItemCellPresenter {
 
 	@Autowired
 	private Service service;
