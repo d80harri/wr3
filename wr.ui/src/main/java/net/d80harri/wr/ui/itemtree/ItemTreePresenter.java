@@ -1,13 +1,12 @@
 package net.d80harri.wr.ui.itemtree;
 
-import net.d80harri.wr.ui.core.IPresenter;
+import net.d80harri.wr.ui.core.PresenterBase;
 
-public class ItemTreePresenter implements IPresenter<IItemTreeView, ItemTreePresenter> {
+public class ItemTreePresenter extends PresenterBase<Void, IItemTreeView, ItemTreePresenter> {
 
-	private IItemTreeView view;
-	
-	public void setView(IItemTreeView view) {
-		this.view = view;
+	public ItemTreePresenter(Void model, IItemTreeView view) {
+		super(model, view);
 	}
+
 
 }

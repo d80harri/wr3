@@ -16,6 +16,10 @@ public class TreeItemCellPresenter extends PresenterBase<ItemDto, ITreeItemCellV
 	@Autowired
 	private Service service;
 	
+	public TreeItemCellPresenter() {
+		super(new ItemDto());
+	}
+
 	public TreeItemCellPresenter(ITreeItemCellView view) {
 		super(new ItemDto(), view);
 	}

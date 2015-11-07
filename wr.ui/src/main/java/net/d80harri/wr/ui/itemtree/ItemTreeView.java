@@ -11,45 +11,45 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.d80harri.wr.ui.core.ViewBase;
-import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellView.TreeItemCellEvent;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView.TreeItemCellEvent;
 
 public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> implements
 		IItemTreeView, Initializable {
 
 	@FXML
-	private TreeView<TreeItemCellView> itemTree;
-	private TreeItem<TreeItemCellView> rootNode;
-	private Supplier<ITreeItemCellPresenter> treeItemCellPresenterFactory;
+	private TreeView<ITreeItemCellView> itemTree;
+	private TreeItem<ITreeItemCellView> rootNode;
+	private Supplier<ITreeItemCellView> treeItemCellView;
 
-	public ItemTreeView(ItemTreePresenter presenter, Supplier<ITreeItemCellPresenter> treeItemCellPresenterFactory) {
+	public ItemTreeView(ItemTreePresenter presenter, Supplier<ITreeItemCellView> treeItemCellView) {
 		super(presenter);
-		this.treeItemCellPresenterFactory = treeItemCellPresenterFactory;
+		this.treeItemCellView = treeItemCellView;
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		rootNode = new TreeItem<TreeItemCellView>();
+		rootNode = new TreeItem<ITreeItemCellView>();
 		
 		rootNode.setExpanded(true);
 		itemTree.setRoot(rootNode);
 	}
 
 	@Override
-	public TreeItem<TreeItemCellView> createRootNode() {
+	public TreeItem<ITreeItemCellView> createRootNode() {
 		return createItemAt(this.rootNode, rootNode.getChildren().size());
 	}
 
 	// TODO: this method should not be public
 	// instead use a method like addItemAfterSelected(new TreeItemCellView());
 	@Override
-	public TreeItem<TreeItemCellView> createItemAt(
-			TreeItem<TreeItemCellView> parent, int indexOfItem) {
-		TreeItemCellView resultCell = new TreeItemCellView(treeItemCellPresenterFactory.get());
-		TreeItem<TreeItemCellView> resultTreeItem = new TreeItem<TreeItemCellView>(
+	public TreeItem<ITreeItemCellView> createItemAt(
+			TreeItem<ITreeItemCellView> parent, int indexOfItem) {
+		ITreeItemCellView resultCell = treeItemCellView.get();
+		TreeItem<ITreeItemCellView> resultTreeItem = new TreeItem<ITreeItemCellView>(
 				resultCell);
-		resultCell.addEventHandler(TreeItemCellView.TreeItemCellEvent.BASE,
+		resultCell.addEventHandler(ITreeItemCellView.TreeItemCellEvent.BASE,
 				this::handleTreeCellEvent);
 
 		parent.getChildren().add(indexOfItem, resultTreeItem);
@@ -66,24 +66,24 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 		return resultTreeItem;
 	}
 
-	public TreeView<TreeItemCellView> getItemTree() {
+	public TreeView<ITreeItemCellView> getItemTree() {
 		return itemTree;
 	}
 
-	public TreeItem<TreeItemCellView> getRootNode() {
+	public TreeItem<ITreeItemCellView> getRootNode() {
 		return rootNode;
 	}
 
 	private void handleTreeCellEvent(TreeItemCellEvent event) {
-		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
+		TreeItem<ITreeItemCellView> item = findItem((ITreeItemCellView) event
 				.getSource());
 		item.getValue().setActivated(false);
 		int rowOfItem = itemTree.getRow(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			TreeItem<TreeItemCellView> newItem = createItemAt(item.getParent(),
+			TreeItem<ITreeItemCellView> newItem = createItemAt(item.getParent(),
 					item.getParent().getChildren().indexOf(item) + 1);
-			newItem.getValue().getTxtTitle().setText(event.getTitle());
+			newItem.getValue().setTitle(event.getTitle());
 		} else if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
 			if (item.getChildren().size() > 0) {
 				boolean expanded = item.expandedProperty().get();
@@ -104,7 +104,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 		} else if (event.getEventType() == TreeItemCellEvent.INDENT) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx > 0) {
-				TreeItem<TreeItemCellView> previous = item.getParent()
+				TreeItem<ITreeItemCellView> previous = item.getParent()
 						.getChildren().get(localIdx - 1);
 				item.getParent().getChildren().remove(item);
 				previous.getChildren().add(item);
@@ -113,37 +113,35 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 		} else if (event.getEventType() == TreeItemCellEvent.MERGEWITH_NEXT) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx + 1 != item.getParent().getChildren().size()) {
-				TreeItem<TreeItemCellView> next = item.getParent()
+				TreeItem<ITreeItemCellView> next = item.getParent()
 						.getChildren().get(localIdx + 1);
 				item.getParent().getChildren().remove(next);
-				item.getValue().getTxtTitle()
-						.appendText(next.getValue().getTxtTitle().getText());
+				item.getValue().appendToTitle(next.getValue().getTitle());
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MERGEWITH_PREVIOUS) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx != 0) {
-				TreeItem<TreeItemCellView> prev = item.getParent()
+				TreeItem<ITreeItemCellView> prev = item.getParent()
 						.getChildren().get(localIdx - 1);
 				item.getParent().getChildren().remove(item);
-				prev.getValue().getTxtTitle()
-						.appendText(item.getValue().getTxtTitle().getText());
+				prev.getValue().appendToTitle(item.getValue().getTitle());
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_DOWN) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx + 1 != item.getParent().getChildren().size()) {
-				TreeItem<TreeItemCellView> parent = item.getParent();
+				TreeItem<ITreeItemCellView> parent = item.getParent();
 				parent.getChildren().remove(item);
 				parent.getChildren().add(localIdx + 1, item);
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_UP) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx >= 1) {
-				TreeItem<TreeItemCellView> parent = item.getParent();
+				TreeItem<ITreeItemCellView> parent = item.getParent();
 				parent.getChildren().remove(item);
 				parent.getChildren().add(localIdx - 1, item);
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.OUTDENT) {
-			TreeItem<TreeItemCellView> parent = item.getParent();
+			TreeItem<ITreeItemCellView> parent = item.getParent();
 			int localIdxOfParent = parent.getParent().getChildren()
 					.indexOf(parent);
 			parent.getChildren().remove(item);
@@ -153,17 +151,17 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 		}
 	}
 
-	private TreeItem<TreeItemCellView> findItem(TreeItemCellView source) {
+	private TreeItem<ITreeItemCellView> findItem(ITreeItemCellView source) {
 		return findItem(this.rootNode, source);
 	}
 
-	private TreeItem<TreeItemCellView> findItem(TreeItem<TreeItemCellView> it,
-			TreeItemCellView item) {
+	private TreeItem<ITreeItemCellView> findItem(TreeItem<ITreeItemCellView> it,
+			ITreeItemCellView item) {
 		if (it.getValue() == item) {
 			return it;
 		} else {
-			for (TreeItem<TreeItemCellView> child : it.getChildren()) {
-				TreeItem<TreeItemCellView> result = findItem(child, item);
+			for (TreeItem<ITreeItemCellView> child : it.getChildren()) {
+				TreeItem<ITreeItemCellView> result = findItem(child, item);
 				if (result != null) {
 					return result;
 				}
@@ -178,9 +176,9 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 	 * =======================================================================
 	 */
 
-	private ObjectProperty<TreeItemCellView> activeCell;
+	private ObjectProperty<ITreeItemCellView> activeCell;
 
-	public final ObjectProperty<TreeItemCellView> activeCellProperty() {
+	public final ObjectProperty<ITreeItemCellView> activeCellProperty() {
 		if (activeCell == null) {
 			activeCell = new SimpleObjectProperty<>(null);
 
@@ -196,12 +194,12 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter, IItemTreeView> imp
 		return this.activeCell;
 	}
 
-	public final net.d80harri.wr.ui.itemtree.cell.TreeItemCellView getActiveCell() {
+	public final ITreeItemCellView getActiveCell() {
 		return this.activeCellProperty().get();
 	}
 
 	public final void setActiveCell(
-			final net.d80harri.wr.ui.itemtree.cell.TreeItemCellView activeCell) {
+			final ITreeItemCellView activeCell) {
 		this.activeCellProperty().set(activeCell);
 	}
 

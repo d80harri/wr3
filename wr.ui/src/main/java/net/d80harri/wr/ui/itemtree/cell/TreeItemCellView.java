@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -21,62 +20,6 @@ import net.d80harri.wr.ui.core.ViewBase;
 
 public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItemCellView> implements
 		Initializable, ITreeItemCellView {
-
-	public static class TreeItemCellEvent extends Event {
-		private static final long serialVersionUID = 3699285621625278032L;
-
-		public static final EventType<TreeItemCellEvent> BASE = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				"BASE");
-
-		public static final EventType<TreeItemCellEvent> INDENT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVETO_CHILD_OF_PREVIOUS");
-
-		public static final EventType<TreeItemCellEvent> DELETE = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "DELETE");
-
-		public static final EventType<TreeItemCellEvent> MERGEWITH_PREVIOUS = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MERGEWITH_PREVIOUS");
-
-		public static final EventType<TreeItemCellEvent> MERGEWITH_NEXT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MERGEWITH_NEXT");
-
-		public static final EventType<TreeItemCellEvent> OUTDENT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVETO_PARENT");
-
-		public static final EventType<TreeItemCellEvent> MOVE_DOWN = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVETO_NEXT");
-
-		public static final EventType<TreeItemCellEvent> MOVE_UP = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "MOVETO_PREVIOUS");
-
-		public static final EventType<TreeItemCellEvent> CREATE_AFTER = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "CREATE_AFTER");
-
-		public static final EventType<TreeItemCellEvent> GOTO_PREVIOUS = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "GOTO_PREVIOUS");
-
-		public static final EventType<TreeItemCellEvent> GOTO_NEXT = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "GOTO_NEXT");
-
-		public static final EventType<TreeItemCellEvent> TOGGLE_EXPAND = new EventType<TreeItemCellView.TreeItemCellEvent>(
-				BASE, "TOGGLE_EXPAND");
-
-		private String title;
-
-		public TreeItemCellEvent(
-				EventType<? extends TreeItemCellEvent> eventType) {
-			super(eventType);
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-	}
 
 	@FXML
 	private TextField txtTitle;
@@ -257,6 +200,7 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 
 	private BooleanProperty activated;
 	
+	@Override
 	public final BooleanProperty activatedProperty() {
 		if (activated == null) {
 			activated = new SimpleBooleanProperty(false);
@@ -273,10 +217,12 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 		return this.activated;
 	}
 
+	@Override
 	public final boolean isActivated() {
 		return this.activatedProperty().get();
 	}
 
+	@Override
 	public final void setActivated(final boolean activated) {
 		this.activatedProperty().set(activated);
 	}
@@ -284,6 +230,21 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 	@Override
 	public StringProperty titleProperty() {
 		return txtTitle.textProperty();
+	}
+
+	@Override
+	public String getTitle() {
+		return titleProperty().get();
+	}
+	
+	@Override
+	public void setTitle(String title) {
+		titleProperty().set(title);
+	}
+	
+	@Override
+	public void appendToTitle(String title) {
+		txtTitle.appendText(title);
 	}
 
 }
