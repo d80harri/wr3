@@ -18,8 +18,8 @@ import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import net.d80harri.wr.ui.core.ViewBase;
 
-public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItemCellView> implements
-		Initializable, ITreeItemCellView {
+public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCellView> implements
+		Initializable {
 
 	@FXML
 	private TextField txtTitle;
@@ -28,7 +28,7 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 	@FXML
 	private FittingHeightTextArea descriptionArea;
 
-	public TreeItemCellView(ITreeItemCellPresenter presenter) {
+	public TreeItemCellView(TreeItemCellPresenter presenter) {
 		super(presenter);
 	}
 	
@@ -200,7 +200,6 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 
 	private BooleanProperty activated;
 	
-	@Override
 	public final BooleanProperty activatedProperty() {
 		if (activated == null) {
 			activated = new SimpleBooleanProperty(false);
@@ -217,32 +216,26 @@ public class TreeItemCellView extends ViewBase<ITreeItemCellPresenter, ITreeItem
 		return this.activated;
 	}
 
-	@Override
 	public final boolean isActivated() {
 		return this.activatedProperty().get();
 	}
 
-	@Override
 	public final void setActivated(final boolean activated) {
 		this.activatedProperty().set(activated);
 	}
 
-	@Override
 	public StringProperty titleProperty() {
 		return txtTitle.textProperty();
 	}
 
-	@Override
 	public String getTitle() {
 		return titleProperty().get();
 	}
 	
-	@Override
 	public void setTitle(String title) {
 		titleProperty().set(title);
 	}
 	
-	@Override
 	public void appendToTitle(String title) {
 		txtTitle.appendText(title);
 	}

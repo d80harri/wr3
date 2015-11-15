@@ -7,7 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import net.d80harri.wr.ui.core.ViewBase;
-import net.d80harri.wr.ui.itemtree.IItemTreeView;
+import net.d80harri.wr.ui.core.WrUiAppContext;
+import net.d80harri.wr.ui.itemtree.ItemTreeView;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
 public class AppView extends ViewBase<AppPresenter, AppView> implements Initializable {
 
@@ -16,10 +19,11 @@ public class AppView extends ViewBase<AppPresenter, AppView> implements Initiali
 	}
 
 	@FXML
-	private IItemTreeView itemTreeView;
+	private ItemTreeView itemTreeView;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		itemTreeView.setTreeItemCellFactory(() -> new TreeItemCellView(WrUiAppContext.get().getBean(TreeItemCellPresenter.class)));
 	}
 
 	@FXML

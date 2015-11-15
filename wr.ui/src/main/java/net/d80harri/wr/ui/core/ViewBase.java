@@ -24,8 +24,12 @@ public abstract class ViewBase<P extends IPresenter<ME, P>, ME extends IView<P, 
 
 	}
 
-	protected final P presenter;
+	protected P presenter;
 
+	public ViewBase() {
+		loadFxml();
+	}
+	
 	public ViewBase(P presenter) {
 		loadFxml();
 		this.presenter = presenter;

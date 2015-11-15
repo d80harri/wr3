@@ -6,8 +6,7 @@ import javafx.event.EventType;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellView;
-import net.d80harri.wr.ui.itemtree.cell.ITreeItemCellView.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellEvent;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
@@ -253,7 +252,7 @@ public class TreeItemCellViewTest extends GuiTest {
 			Runnable additionalActions) {
 		EventHandler<TreeItemCellEvent> mockedEvent = Mockito
 				.mock(EventHandler.class);
-		view.addEventHandler(ITreeItemCellView.TreeItemCellEvent.BASE,
+		view.addEventHandler(TreeItemCellEvent.BASE,
 				mockedEvent);
 
 		if (additionalActions != null)
