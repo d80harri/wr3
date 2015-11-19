@@ -5,13 +5,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
-import net.d80harri.wr.ui.core.IPresenter;
+import javafx.application.Platform;
 
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import javafx.application.Platform;
 
 public class TestUtilMethods {
 	

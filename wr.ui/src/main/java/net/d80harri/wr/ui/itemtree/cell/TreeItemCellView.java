@@ -1,13 +1,15 @@
 package net.d80harri.wr.ui.itemtree.cell;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.fxmisc.easybind.EasyBind;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -18,7 +20,7 @@ import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import net.d80harri.wr.ui.core.ViewBase;
 
-public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCellView> implements
+public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		Initializable {
 
 	@FXML
@@ -31,19 +33,39 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCe
 	public TreeItemCellView(TreeItemCellPresenter presenter) {
 		super(presenter);
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
-		detailPane.addEventFilter(KeyEvent.KEY_PRESSED, this::detail_KeyPressed);
+		detailPane
+				.addEventFilter(KeyEvent.KEY_PRESSED, this::detail_KeyPressed);
 		detailPane.managedProperty().bind(detailVisibleProperty());
 		detailPane.visibleProperty().bind(detailVisibleProperty());
 
 		this.addEventFilter(MouseEvent.MOUSE_CLICKED,
 				new EventHandler<MouseEvent>() {
 					public void handle(MouseEvent evt) {
-						setActivated(true);
+						Optional.ofNullable(getPresenter()).ifPresent(i -> i.setActivated(true));
 					};
+				});
+
+		EasyBind.select(this.presenterProperty())
+				.selectObject(i -> i.titleProperty())
+				.addListener((obs, o, n) -> txtTitle.setText(n));
+		txtTitle.textProperty().addListener(
+				(obs, o, n) -> Optional.of(this.getPresenter()).ifPresent(
+						i -> i.setTitle(n)));
+
+		EasyBind.select(this.presenterProperty())
+				.selectObject(i -> i.activatedProperty())
+				.addListener((obs, o, n) -> {
+					if (n) {
+						txtTitle.requestFocus();
+						txtTitle.positionCaret(0);
+					} else {
+						setDetailVisible(false);
+						getPresenter().saveOrUpdate();
+					}
 				});
 	}
 
@@ -66,7 +88,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCe
 			}
 		}
 	}
-	
+
 	private void txtTitle_KeyPressed(KeyEvent evt) {
 		if (evt.isControlDown()) {
 			if (evt.getCode() == KeyCode.SPACE) {
@@ -74,8 +96,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCe
 						TreeItemCellEvent.TOGGLE_EXPAND));
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.D) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.DELETE));
+				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.DELETE));
 			}
 		} else if (evt.isShiftDown()) {
 			if (evt.getCode() == KeyCode.TAB) {
@@ -182,7 +203,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCe
 	 */
 
 	private BooleanProperty detailVisible;
-	
+
 	public final BooleanProperty detailVisibleProperty() {
 		if (detailVisible == null) {
 			detailVisible = new SimpleBooleanProperty(false);
@@ -198,44 +219,6 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter, TreeItemCe
 		this.detailVisibleProperty().set(detailVisible);
 	}
 
-	private BooleanProperty activated;
-	
-	public final BooleanProperty activatedProperty() {
-		if (activated == null) {
-			activated = new SimpleBooleanProperty(false);
-			activated.addListener((obs, o, n) -> {
-				if (n) {
-					txtTitle.requestFocus();
-					txtTitle.positionCaret(0);
-				} else {
-					setDetailVisible(false);
-					getPresenter().saveOrUpdate();
-				}
-			});
-		}
-		return this.activated;
-	}
-
-	public final boolean isActivated() {
-		return this.activatedProperty().get();
-	}
-
-	public final void setActivated(final boolean activated) {
-		this.activatedProperty().set(activated);
-	}
-
-	public StringProperty titleProperty() {
-		return txtTitle.textProperty();
-	}
-
-	public String getTitle() {
-		return titleProperty().get();
-	}
-	
-	public void setTitle(String title) {
-		titleProperty().set(title);
-	}
-	
 	public void appendToTitle(String title) {
 		txtTitle.appendText(title);
 	}

@@ -1,9 +1,11 @@
 package net.d80harri.wr.ui.core;
 
-import javafx.event.Event;
+import javafx.beans.property.ObjectProperty;
 
-public interface IView<P extends IPresenter<ME, P>, ME extends IView<P, ME>> {
+public interface IView<P> {
 
 	public abstract P getPresenter();
-	public void fireEvent(Event event);
+	public abstract void setPresenter(P presenter);
+	public abstract ObjectProperty<P> presenterProperty();
+	
 }

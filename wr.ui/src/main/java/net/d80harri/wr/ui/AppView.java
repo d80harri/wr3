@@ -12,7 +12,7 @@ import net.d80harri.wr.ui.itemtree.ItemTreeView;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
-public class AppView extends ViewBase<AppPresenter, AppView> implements Initializable {
+public class AppView extends ViewBase<AppPresenter> implements Initializable {
 
 	public AppView(AppPresenter presenter) {
 		super(presenter);
