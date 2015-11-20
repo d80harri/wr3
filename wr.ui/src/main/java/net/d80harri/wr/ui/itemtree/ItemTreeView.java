@@ -4,20 +4,21 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
-import org.fxmisc.easybind.EasyBind;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.d80harri.wr.ui.core.ViewBase;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellEvent;
+import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
-public class ItemTreeView extends ViewBase<ItemTreePresenter>
-		implements Initializable {
+import org.fxmisc.easybind.EasyBind;
+
+public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
+		Initializable {
 
 	@FXML
 	private TreeView<TreeItemCellView> itemTree;
@@ -27,16 +28,17 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 	public ItemTreeView() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public ItemTreeView(ItemTreePresenter presenter,
 			Supplier<TreeItemCellView> treeItemCellView) {
 		super(presenter);
 		this.treeItemCellFactory = treeItemCellView;
 	}
-	
+
 	public Supplier<TreeItemCellView> getTreeItemCellFactory() {
 		return treeItemCellFactory;
 	}
+
 	public void setTreeItemCellFactory(
 			Supplier<TreeItemCellView> treeItemCellFactory) {
 		this.treeItemCellFactory = treeItemCellFactory;
@@ -48,10 +50,39 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 
 		rootNode.setExpanded(true);
 		itemTree.setRoot(rootNode);
-	}
 
-	public TreeItem<TreeItemCellView> createRootNode() {
-		return createItemAt(this.rootNode, rootNode.getChildren().size());
+		presenterProperty()
+				.addListener(
+						(obs, o, n) -> {
+							ObservableList<TreeItem<TreeItemCellView>> mappedList = EasyBind
+									.map(n.getRootItems(), i -> new TreeItem<>(
+											new TreeItemCellView(i)));
+							n.getRootItems()
+									.addListener(
+											new ListChangeListener<TreeItemCellPresenter>() {
+
+												@Override
+												public void onChanged(
+														javafx.collections.ListChangeListener.Change<? extends TreeItemCellPresenter> c) {
+													System.out.println("?"
+															+ n.getRootItems()
+																	.size());
+												}
+
+											});
+							EasyBind.listBind(rootNode.getChildren(),
+									mappedList);
+						});
+		rootNode.getChildren().addListener(
+				new ListChangeListener<TreeItem<TreeItemCellView>>() {
+
+					@Override
+					public void onChanged(
+							javafx.collections.ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) {
+						System.out.println("!" + rootNode.getChildren().size());
+					}
+
+				});
 	}
 
 	// TODO: this method should not be public
@@ -66,14 +97,18 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 
 		parent.getChildren().add(indexOfItem, resultTreeItem);
 		itemTree.layout();
-		EasyBind.select(resultCell.presenterProperty()).selectObject(i -> i.activatedProperty()).addListener((obs, o, n) ->  {
-			if (n) {
-				activeCellProperty().set(resultCell);
-			} else {
-				activeCellProperty().set(null);
-			}
-		});
-		
+		EasyBind.select(resultCell.presenterProperty())
+				.selectObject(i -> i.activatedProperty())
+				.addListener(
+						(obs, o, n) -> {
+							if (n) {
+								getPresenter().setActiveItem(
+										resultCell.getPresenter());
+							} else {
+								getPresenter().setActiveItem(null);
+							}
+						});
+
 		resultCell.getPresenter().setActivated(true);
 
 		return resultTreeItem;
@@ -94,10 +129,9 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 		int rowOfItem = itemTree.getRow(item);
 
 		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			TreeItem<TreeItemCellView> newItem = createItemAt(
-					item.getParent(),
-					item.getParent().getChildren().indexOf(item) + 1);
-			newItem.getValue().getPresenter().setTitle(event.getTitle());
+			TreeItemCellPresenter newPresenter = new TreeItemCellPresenter();
+			newPresenter.setTitle(event.getTitle());
+			getPresenter().addNodeToActive(newPresenter);
 		} else if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
 			if (item.getChildren().size() > 0) {
 				boolean expanded = item.expandedProperty().get();
@@ -106,13 +140,16 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 				if (expanded) {
 					item.getValue().getPresenter().setActivated(true);
 				} else {
-					item.getChildren().get(0).getValue().getPresenter().setActivated(true);
+					item.getChildren().get(0).getValue().getPresenter()
+							.setActivated(true);
 				}
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.GOTO_PREVIOUS) {
-			itemTree.getTreeItem(rowOfItem - 1).getValue().getPresenter().setActivated(true);
+			itemTree.getTreeItem(rowOfItem - 1).getValue().getPresenter()
+					.setActivated(true);
 		} else if (event.getEventType() == TreeItemCellEvent.GOTO_NEXT) {
-			itemTree.getTreeItem(rowOfItem + 1).getValue().getPresenter().setActivated(true);
+			itemTree.getTreeItem(rowOfItem + 1).getValue().getPresenter()
+					.setActivated(true);
 		} else if (event.getEventType() == TreeItemCellEvent.DELETE) {
 			item.getParent().getChildren().remove(item);
 		} else if (event.getEventType() == TreeItemCellEvent.INDENT) {
@@ -130,7 +167,8 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 				TreeItem<TreeItemCellView> next = item.getParent()
 						.getChildren().get(localIdx + 1);
 				item.getParent().getChildren().remove(next);
-				item.getValue().appendToTitle(next.getValue().getPresenter().getTitle());
+				item.getValue().appendToTitle(
+						next.getValue().getPresenter().getTitle());
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MERGEWITH_PREVIOUS) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
@@ -138,7 +176,8 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 				TreeItem<TreeItemCellView> prev = item.getParent()
 						.getChildren().get(localIdx - 1);
 				item.getParent().getChildren().remove(item);
-				prev.getValue().appendToTitle(item.getValue().getPresenter().getTitle());
+				prev.getValue().appendToTitle(
+						item.getValue().getPresenter().getTitle());
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MOVE_DOWN) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
@@ -169,8 +208,8 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 		return findItem(this.rootNode, source);
 	}
 
-	private TreeItem<TreeItemCellView> findItem(
-			TreeItem<TreeItemCellView> it, TreeItemCellView item) {
+	private TreeItem<TreeItemCellView> findItem(TreeItem<TreeItemCellView> it,
+			TreeItemCellView item) {
 		if (it.getValue() == item) {
 			return it;
 		} else {
@@ -182,38 +221,6 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter>
 			}
 		}
 		return null;
-	}
-
-	/*
-	 * =======================================================================
-	 * == PROPERTIES ==
-	 * =======================================================================
-	 */
-
-	private ObjectProperty<TreeItemCellView> activeCell;
-
-	public final ObjectProperty<TreeItemCellView> activeCellProperty() {
-		if (activeCell == null) {
-			activeCell = new SimpleObjectProperty<>(null);
-
-			activeCell.addListener((obs, o, n) -> {
-				if (o != null) {
-					o.getPresenter().setActivated(false);
-				}
-				if (n != null) {
-					n.getPresenter().setActivated(true);
-				}
-			});
-		}
-		return this.activeCell;
-	}
-
-	public final TreeItemCellView getActiveCell() {
-		return this.activeCellProperty().get();
-	}
-
-	public final void setActiveCell(final TreeItemCellView activeCell) {
-		this.activeCellProperty().set(activeCell);
 	}
 
 }

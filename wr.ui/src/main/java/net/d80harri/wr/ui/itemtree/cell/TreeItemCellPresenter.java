@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
@@ -25,8 +27,6 @@ public class TreeItemCellPresenter {
 	@Autowired
 	private SpringAwareBeanMapper mapper;
 
-	private ObjectProperty<Integer> id;
-	private StringProperty title;
 
 	public void saveOrUpdate() {
 		ItemDto dto = mapper.map(this, ItemDto.class);
@@ -42,6 +42,13 @@ public class TreeItemCellPresenter {
 		this.service = service;
 	}
 
+	private ObservableList<TreeItemCellPresenter> children = FXCollections.observableArrayList();
+	
+	public ObservableList<TreeItemCellPresenter> getChildren() {
+		return children;
+	}
+	
+	private StringProperty title;
 	public final StringProperty titleProperty() {
 		if (title == null) {
 			title = new SimpleStringProperty(this, "title");
@@ -57,6 +64,7 @@ public class TreeItemCellPresenter {
 		this.titleProperty().set(title);
 	}
 
+	private ObjectProperty<Integer> id;
 	public final ObjectProperty<Integer> idProperty() {
 		if (id == null) {
 			id = new SimpleObjectProperty<>(this, "id");
@@ -88,6 +96,10 @@ public class TreeItemCellPresenter {
 
 	public final void setActivated(final boolean activated) {
 		this.activatedProperty().set(activated);
+	}
+
+	public void addChildItem(TreeItemCellPresenter newPresenter) {
+		getChildren().add(newPresenter);
 	}
 
 }

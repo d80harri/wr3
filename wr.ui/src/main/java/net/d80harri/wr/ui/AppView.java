@@ -12,6 +12,8 @@ import net.d80harri.wr.ui.itemtree.ItemTreeView;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
+import org.fxmisc.easybind.EasyBind;
+
 public class AppView extends ViewBase<AppPresenter> implements Initializable {
 
 	public AppView(AppPresenter presenter) {
@@ -23,12 +25,13 @@ public class AppView extends ViewBase<AppPresenter> implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		itemTreeView.presenterProperty().bind(EasyBind.select(presenterProperty()).selectObject(i -> i.itemTreeProperty()));
 		itemTreeView.setTreeItemCellFactory(() -> new TreeItemCellView(WrUiAppContext.get().getBean(TreeItemCellPresenter.class)));
 	}
 
 	@FXML
 	private void addEventHandler(ActionEvent event) {
-		itemTreeView.createRootNode();
+		getPresenter().createRootItem();
 	}
 
 }
