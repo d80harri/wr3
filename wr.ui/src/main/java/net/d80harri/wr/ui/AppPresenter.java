@@ -2,14 +2,21 @@ package net.d80harri.wr.ui;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import net.d80harri.wr.service.Service;
+import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 import net.d80harri.wr.ui.itemtree.ItemTreePresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 
 
 public class AppPresenter {
-
-	public AppPresenter() {
-		setItemTree(new ItemTreePresenter());
+	private Service service;
+	
+	private SpringAwareBeanMapper mapper;
+	
+	public AppPresenter(Service service, SpringAwareBeanMapper mapper) {
+		this.service = service;
+		this.mapper = mapper;				
+		setItemTree(new ItemTreePresenter(service, mapper));
 	}
 	
 	private ObjectProperty<ItemTreePresenter> itemTree;
@@ -31,7 +38,7 @@ public class AppPresenter {
 	}
 
 	public void createRootItem() {
-		getItemTree().addRootNode(new TreeItemCellPresenter());
+		getItemTree().addRootNode(new TreeItemCellPresenter(service, mapper));
 	}
 
 }

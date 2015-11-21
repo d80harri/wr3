@@ -12,21 +12,16 @@ import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TreeItemCellPresenter {
 
-	@Autowired
 	private Service service;
 	
-	@Autowired
 	private SpringAwareBeanMapper mapper;
 
+	public TreeItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
+		this.service = service;
+		this.mapper = mapper;				
+	}
 
 	public void saveOrUpdate() {
 		ItemDto dto = mapper.map(this, ItemDto.class);

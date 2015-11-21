@@ -4,12 +4,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.d80harri.wr.service.Service;
+import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 
 public class ItemTreePresenter {
+	private Service service;
+	private SpringAwareBeanMapper mapper;
 	
-	public ItemTreePresenter() {
-		// TODO Auto-generated constructor stub
+	public ItemTreePresenter(Service service, SpringAwareBeanMapper mapper) {
+		this.service = service;
+		this.mapper = mapper;
 	}
 	
 	public void addRootNode(TreeItemCellPresenter rootNode) {
@@ -48,7 +53,9 @@ public class ItemTreePresenter {
 		this.activeItemProperty().set(activeItem);
 	}
 
-	public void addNodeToActive(TreeItemCellPresenter newPresenter) {
+	public void addNodeToActive(String title) {
+		TreeItemCellPresenter newPresenter = new TreeItemCellPresenter(service, mapper);
+		newPresenter.setTitle(title);
 		getActiveItem().addChildItem(newPresenter);
 	}	
 }

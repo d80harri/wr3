@@ -4,21 +4,22 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import org.fxmisc.easybind.EasyBind;
-
+import javafx.beans.binding.When;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import net.d80harri.wr.ui.core.ViewBase;
+
+import org.fxmisc.easybind.EasyBind;
 
 public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		Initializable {
@@ -45,7 +46,8 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		this.addEventFilter(MouseEvent.MOUSE_CLICKED,
 				new EventHandler<MouseEvent>() {
 					public void handle(MouseEvent evt) {
-						Optional.ofNullable(getPresenter()).ifPresent(i -> i.setActivated(true));
+						Optional.ofNullable(getPresenter()).ifPresent(
+								i -> i.setActivated(true));
 					};
 				});
 
