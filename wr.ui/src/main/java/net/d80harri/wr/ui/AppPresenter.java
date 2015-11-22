@@ -17,6 +17,7 @@ public class AppPresenter {
 		this.service = service;
 		this.mapper = mapper;				
 		setItemTree(new ItemTreePresenter(service, mapper));
+		getItemTree().load();
 	}
 	
 	private ObjectProperty<ItemTreePresenter> itemTree;

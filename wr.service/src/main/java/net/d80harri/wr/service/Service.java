@@ -1,8 +1,12 @@
 package net.d80harri.wr.service;
 
+import java.util.List;
+
 import ma.glasnost.orika.impl.ConfigurableMapper;
 import net.d80harri.wr.db.EntityFactory;
+import net.d80harri.wr.db.model.Item;
 import net.d80harri.wr.db.model.WrEntity;
+import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.model.WrDto;
 
 public class Service {
@@ -38,6 +42,11 @@ public class Service {
 	
 	public void setMapperFacade(ConfigurableMapper mapperFacade) {
 		this.mapperFacade = mapperFacade;
+	}
+
+	public List<ItemDto> getRootItems() {
+		List<Item> itemResult = entityFactory.getRootItems();
+		return mapperFacade.mapAsList(itemResult, ItemDto.class);
 	}
 
 }

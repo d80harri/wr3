@@ -34,21 +34,6 @@ public class ItemTreeViewTest extends GuiTest {
 	}
 
 	@Test
-	public void shallCreateNewRootNode() {
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
-			result.getValue().getPresenter().setTitle("Root");
-			return result;
-		});
-
-		Assertions.assertThat(view.getItemTree().getRoot().getChildren())
-				.hasSize(1).contains(newCell);
-		Assertions.assertThat(newCell.getChildren()).hasSize(0);
-		Assertions.assertThat(newCell.getParent())
-				.isEqualTo(view.getRootNode());
-	}
-
-	@Test
 	public void shallCreateItemAt() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
 		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
@@ -59,36 +44,6 @@ public class ItemTreeViewTest extends GuiTest {
 				.createItemAt(view.getRootNode(), 1));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
 				.contains(newCell, veryNewCell);
-	}
-
-	@Test
-	public void createdRootNodeShouldBeSelected() throws InterruptedException {
-		TreeItem<TreeItemCellView> cellView = computeLater(() -> view
-				.createRootNode());
-
-		Assertions.assertThat(cellView.getValue().getPresenter().isActivated()).isTrue();
-	}
-
-	@Test
-	public void shallAddNodeWhenCellRequestsNextSibling() {
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> firstCell = computeLater(() -> view
-				.createRootNode());
-
-		TreeItem<TreeItemCellView> thirdCell = computeLater(() -> view
-				.createRootNode());
-
-		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2);
-
-		runLater(() -> firstCell.getValue().fireEvent(
-				new TreeItemCellEvent(TreeItemCellEvent.CREATE_AFTER)));
-		Assertions.assertThat(view.getRootNode().getChildren().get(0))
-				.isEqualTo(firstCell);
-		Assertions.assertThat(view.getRootNode().getChildren().get(2))
-				.isEqualTo(thirdCell);
-
-		// TODO: register listener that fires when node is created
-		// use this listener to retrieve the reference of the newly created item
 	}
 
 	// TODO: reactivate the following testcases

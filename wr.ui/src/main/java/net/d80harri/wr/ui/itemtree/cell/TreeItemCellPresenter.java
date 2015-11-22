@@ -18,6 +18,8 @@ public class TreeItemCellPresenter {
 	
 	private SpringAwareBeanMapper mapper;
 
+	public TreeItemCellPresenter() {}
+	
 	public TreeItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
 		this.service = service;
 		this.mapper = mapper;				
@@ -35,6 +37,13 @@ public class TreeItemCellPresenter {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+	
+	public SpringAwareBeanMapper getMapper() {
+		return mapper;
+	}
+	public void setMapper(SpringAwareBeanMapper mapper) {
+		this.mapper = mapper;
 	}
 
 	private ObservableList<TreeItemCellPresenter> children = FXCollections.observableArrayList();
