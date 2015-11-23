@@ -4,7 +4,6 @@ import java.util.List;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
@@ -17,16 +16,22 @@ public class ItemTreePresenter {
 	private Service service;
 	private SpringAwareBeanMapper mapper;
 
+	private TreeItemCellPresenter invisibleRoot;
+
 	public ItemTreePresenter(Service service, SpringAwareBeanMapper mapper) {
 		this.service = service;
 		this.mapper = mapper;
 	}
 
-	private ObservableList<TreeItemCellPresenter> rootItems = FXCollections
-			.observableArrayList();
+	public TreeItemCellPresenter getInvisibleRoot() {
+		if (invisibleRoot == null) {
+			invisibleRoot = new TreeItemCellPresenter(service, mapper);
+		}
+		return invisibleRoot;
+	}
 
 	public ObservableList<TreeItemCellPresenter> getRootItems() {
-		return this.rootItems;
+		return getInvisibleRoot().getChildren();
 	}
 
 	private ObjectProperty<TreeItemCellPresenter> activeItem;
@@ -97,6 +102,7 @@ public class ItemTreePresenter {
 		presenterResult.stream().forEach(i -> {
 			i.setService(service);
 			i.setMapper(mapper);
+			registerCellPresenter(i);
 		});
 		
 		getRootItems().clear();

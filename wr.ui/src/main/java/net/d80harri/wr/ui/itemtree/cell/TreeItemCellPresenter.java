@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
@@ -15,20 +16,19 @@ import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 public class TreeItemCellPresenter {
 
 	private Service service;
-	
 	private SpringAwareBeanMapper mapper;
 
-	public TreeItemCellPresenter() {}
-	
-	public TreeItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
-		this.service = service;
-		this.mapper = mapper;				
+	private ObjectProperty<Integer> id;
+	private StringProperty title;
+	private ObservableList<TreeItemCellPresenter> children;
+	private ObjectProperty<TreeItemCellPresenter> parent;
+
+	public TreeItemCellPresenter() {
 	}
 
-	public void saveOrUpdate() {
-		ItemDto dto = mapper.map(this, ItemDto.class);
-		ItemDto persisted = service.saveOrUpdate(dto);
-		mapper.map(persisted, this);
+	public TreeItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
+		this.service = service;
+		this.mapper = mapper;
 	}
 
 	public Service getService() {
@@ -38,21 +38,45 @@ public class TreeItemCellPresenter {
 	public void setService(Service service) {
 		this.service = service;
 	}
-	
+
 	public SpringAwareBeanMapper getMapper() {
 		return mapper;
 	}
+
 	public void setMapper(SpringAwareBeanMapper mapper) {
 		this.mapper = mapper;
 	}
 
-	private ObservableList<TreeItemCellPresenter> children = FXCollections.observableArrayList();
-	
 	public ObservableList<TreeItemCellPresenter> getChildren() {
+		if (children == null) {
+			children = FXCollections.observableArrayList();
+			children.addListener(new ListChangeListener<TreeItemCellPresenter>() {
+
+				@Override
+				public void onChanged(Change<? extends TreeItemCellPresenter> c) {
+					while (c.next()) {
+						if (c.wasPermutated() || c.wasReplaced()
+								|| c.wasUpdated()) {
+							throw new UnsupportedOperationException("NYI");
+						}
+						if (c.wasAdded()) {
+							c.getAddedSubList()
+									.stream()
+									.forEach(
+											i -> i.setParent(TreeItemCellPresenter.this));
+						}
+						if (c.wasRemoved()) {
+							c.getRemoved().stream()
+									.forEach(i -> i.setParent(null));
+						}
+					}
+				}
+
+			});
+		}
 		return children;
 	}
-	
-	private StringProperty title;
+
 	public final StringProperty titleProperty() {
 		if (title == null) {
 			title = new SimpleStringProperty(this, "title");
@@ -60,15 +84,14 @@ public class TreeItemCellPresenter {
 		return this.title;
 	}
 
-	public final java.lang.String getTitle() {
+	public final String getTitle() {
 		return this.titleProperty().get();
 	}
 
-	public final void setTitle(final java.lang.String title) {
+	public final void setTitle(final String title) {
 		this.titleProperty().set(title);
 	}
 
-	private ObjectProperty<Integer> id;
 	public final ObjectProperty<Integer> idProperty() {
 		if (id == null) {
 			id = new SimpleObjectProperty<>(this, "id");
@@ -76,20 +99,24 @@ public class TreeItemCellPresenter {
 		return this.id;
 	}
 
-	public final java.lang.Integer getId() {
+	public final Integer getId() {
 		return this.idProperty().get();
 	}
 
-	public final void setId(final java.lang.Integer id) {
+	public final void setId(final Integer id) {
 		this.idProperty().set(id);
 	}
-	
 
 	private BooleanProperty activated;
-	
+
 	public final BooleanProperty activatedProperty() {
 		if (activated == null) {
 			activated = new SimpleBooleanProperty(false);
+			activated.addListener((obs, o, n) -> {
+				if (!n) {
+					this.saveOrUpdate();
+				}
+			});
 		}
 		return this.activated;
 	}
@@ -102,8 +129,76 @@ public class TreeItemCellPresenter {
 		this.activatedProperty().set(activated);
 	}
 
-	public void addChildItem(TreeItemCellPresenter newPresenter) {
-		getChildren().add(newPresenter);
+	public final ObjectProperty<TreeItemCellPresenter> parentProperty() {
+		if (parent == null) {
+			parent = new SimpleObjectProperty<>(this, "parent");
+			parent.addListener((obs, o, n) -> {
+				if (n == null) {
+					o.getChildren().remove(this);
+				} else {
+					if (!n.getChildren().contains(this))
+						n.getChildren().add(this);
+				}
+			});
+		}
+		return this.parent;
+	}
+
+	public final TreeItemCellPresenter getParent() {
+		return this.parentProperty().get();
+	}
+
+	public final void setParent(final TreeItemCellPresenter parent) {
+		this.parentProperty().set(parent);
+	}
+
+	// =================================================================
+	// Operations
+	// =================================================================
+	public void saveOrUpdate() {
+		ItemDto dto = mapper.map(this, ItemDto.class);
+		ItemDto persisted = service.saveOrUpdate(dto);
+		mapper.map(persisted, this);
+	}
+
+	public void loadChildren() {
+		this.getChildren().clear();
+		this.getChildren().addAll(
+				mapper.mapAsList(service.getItemsByParentId(this.getId()),
+						TreeItemCellPresenter.class));
+		this.getChildren().stream().forEach(i -> {
+			i.setService(this.service);
+			i.setMapper(this.mapper);
+		});
+	}
+
+	public void gotoPreviousSibling() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idxOfThis = parent.getChildren().indexOf(this);
+			if (idxOfThis != 0) {
+				parent.getChildren().get(idxOfThis - 1).setActivated(true);
+			}
+		}
+	}
+
+	public void gotoNextSibling() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idxOfThis = parent.getChildren().indexOf(this);
+			if (idxOfThis != parent.getChildren().size()) {
+				this.setActivated(false);
+				parent.getChildren().get(idxOfThis + 1).setActivated(true);
+			}
+		}
+	}
+
+	public void delete() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			this.setActivated(false);
+			parent.getChildren().remove(this);
+		}
 	}
 
 }

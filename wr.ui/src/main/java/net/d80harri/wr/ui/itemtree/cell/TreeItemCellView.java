@@ -4,14 +4,12 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.beans.binding.When;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -51,24 +49,27 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					};
 				});
 
-		EasyBind.select(this.presenterProperty())
-				.selectObject(i -> i.titleProperty())
-				.addListener((obs, o, n) -> txtTitle.setText(n));
+		EasyBind.subscribe(presenterProperty(), this::presenterChanged);
+
 		txtTitle.textProperty().addListener(
 				(obs, o, n) -> Optional.of(this.getPresenter()).ifPresent(
 						i -> i.setTitle(n)));
+	}
 
-		EasyBind.select(this.presenterProperty())
-				.selectObject(i -> i.activatedProperty())
-				.addListener((obs, o, n) -> {
-					if (n) {
-						txtTitle.requestFocus();
-						txtTitle.positionCaret(0);
-					} else {
-						setDetailVisible(false);
-						getPresenter().saveOrUpdate();
-					}
-				});
+	private void presenterChanged(TreeItemCellPresenter presenter) {
+		if (presenter != null) {
+			EasyBind.subscribe(presenter.titleProperty(),
+					n -> txtTitle.setText(n));
+			presenter.activatedProperty().addListener((obs, o, n) ->{
+				if (n) {
+					txtTitle.requestFocus();
+					txtTitle.positionCaret(0);
+				} else {
+					setDetailVisible(false);
+					getPresenter().saveOrUpdate();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 						TreeItemCellEvent.TOGGLE_EXPAND));
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.D) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.DELETE));
+				getPresenter().delete();
 			}
 		} else if (evt.isShiftDown()) {
 			if (evt.getCode() == KeyCode.TAB) {
@@ -143,20 +144,17 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					evt.consume();
 				}
 			} else if (evt.getCode() == KeyCode.UP) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.GOTO_PREVIOUS));
+				getPresenter().gotoPreviousSibling();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.DOWN) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.GOTO_NEXT));
+				getPresenter().gotoNextSibling();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.TAB) {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.BACK_SPACE) {
 				if (txtTitle.getText().isEmpty()) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.DELETE));
+					getPresenter().delete();
 					evt.consume();
 				} else if (txtTitle.getCaretPosition() == 0) {
 					this.fireEvent(new TreeItemCellEvent(
@@ -165,8 +163,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				}
 			} else if (evt.getCode() == KeyCode.DELETE) {
 				if (txtTitle.getText().isEmpty()) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.DELETE));
+					getPresenter().delete();
 					evt.consume();
 				} else if (txtTitle.getCaretPosition() == txtTitle.getText()
 						.length()) {
@@ -176,14 +173,12 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				}
 			} else if (evt.getCode() == KeyCode.LEFT) {
 				if (txtTitle.getCaretPosition() == 0) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.GOTO_PREVIOUS));
+					getPresenter().gotoPreviousSibling();
 					evt.consume();
 				}
 			} else if (evt.getCode() == KeyCode.RIGHT) {
 				if (txtTitle.getCaretPosition() == txtTitle.getText().length()) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.GOTO_NEXT));
+					getPresenter().gotoNextSibling();
 					evt.consume();
 				}
 			}

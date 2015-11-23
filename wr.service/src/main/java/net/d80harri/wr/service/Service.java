@@ -49,4 +49,9 @@ public class Service {
 		return mapperFacade.mapAsList(itemResult, ItemDto.class);
 	}
 
+	public List<ItemDto> getItemsByParentId(int id) {
+		List<Item> itemResult = entityFactory.getChildItemsOf(id);
+		return mapperFacade.mapAsList(itemResult, ItemDto.class);
+	}
+
 }

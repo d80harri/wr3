@@ -16,9 +16,6 @@ public class TreeItemCellEvent extends Event {
 	public static final EventType<TreeItemCellEvent> INDENT = new EventType<TreeItemCellEvent>(
 			BASE, "MOVETO_CHILD_OF_PREVIOUS");
 
-	public static final EventType<TreeItemCellEvent> DELETE = new EventType<TreeItemCellEvent>(
-			BASE, "DELETE");
-
 	public static final EventType<TreeItemCellEvent> MERGEWITH_PREVIOUS = new EventType<TreeItemCellEvent>(
 			BASE, "MERGEWITH_PREVIOUS");
 
@@ -36,13 +33,7 @@ public class TreeItemCellEvent extends Event {
 
 	public static final EventType<TreeItemCellEvent> CREATE_AFTER = new EventType<TreeItemCellEvent>(
 			BASE, "CREATE_AFTER");
-
-	public static final EventType<TreeItemCellEvent> GOTO_PREVIOUS = new EventType<TreeItemCellEvent>(
-			BASE, "GOTO_PREVIOUS");
-
-	public static final EventType<TreeItemCellEvent> GOTO_NEXT = new EventType<TreeItemCellEvent>(
-			BASE, "GOTO_NEXT");
-
+	
 	public static final EventType<TreeItemCellEvent> TOGGLE_EXPAND = new EventType<TreeItemCellEvent>(
 			BASE, "TOGGLE_EXPAND");
 

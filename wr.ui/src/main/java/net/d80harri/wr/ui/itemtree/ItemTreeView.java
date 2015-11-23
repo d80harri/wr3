@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
-import javafx.collections.ListChangeListener.Change;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +55,9 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		itemTree.setRoot(rootNode);
 
 		EasyBind.subscribe(presenterProperty(), this::presenterChanged);
-		rootNode.getChildren().addListener((ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
+		rootNode.getChildren()
+				.addListener(
+						(ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
 	}
 
 	private void presenterChanged(ItemTreePresenter presenter) {
@@ -71,13 +73,27 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	private TreeItem<TreeItemCellView> createTreeItemFromPresenter(
 			TreeItemCellPresenter presenter) {
 		TreeItem<TreeItemCellView> result = new TreeItem<TreeItemCellView>(
-				createCellViewFromPresenter(presenter)){
+				createCellViewFromPresenter(presenter)) {
+			ObservableList<TreeItem<TreeItemCellView>> children;
+
+			@Override
+			public boolean isLeaf() {
+				return getChildren().size() == 0;
+			}
+
 			@Override
 			public ObservableList<TreeItem<TreeItemCellView>> getChildren() {
-				return EasyBind.map(getValue().getPresenter().getChildren(), i -> createTreeItemFromPresenter(i));
+				if (children == null) {
+					children = EasyBind.map(presenter.getChildren(),
+							i -> createTreeItemFromPresenter(i));
+					presenter.loadChildren();
+				}
+				return this.children;
 			}
 		};
-		result.getChildren().addListener((ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
+		result.getChildren()
+				.addListener(
+						(ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
 		return result;
 	}
 
@@ -98,6 +114,7 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	}
 
 	private void handleTreeCellEvent(TreeItemCellEvent event) {
+		TreeItemCellView source = (TreeItemCellView) event.getSource();
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		item.getValue().getPresenter().setActivated(false);
@@ -117,21 +134,13 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 							.setActivated(true);
 				}
 			}
-		} else if (event.getEventType() == TreeItemCellEvent.GOTO_PREVIOUS) {
-			itemTree.getTreeItem(rowOfItem - 1).getValue().getPresenter()
-					.setActivated(true);
-		} else if (event.getEventType() == TreeItemCellEvent.GOTO_NEXT) {
-			itemTree.getTreeItem(rowOfItem + 1).getValue().getPresenter()
-					.setActivated(true);
-		} else if (event.getEventType() == TreeItemCellEvent.DELETE) {
-			item.getParent().getChildren().remove(item);
 		} else if (event.getEventType() == TreeItemCellEvent.INDENT) {
 			int localIdx = item.getParent().getChildren().indexOf(item);
 			if (localIdx > 0) {
 				TreeItem<TreeItemCellView> previous = item.getParent()
 						.getChildren().get(localIdx - 1);
 				item.getParent().getChildren().remove(item);
-				previous.getChildren().add(item);
+				previous.getValue().getChildren().add(source);
 				previous.setExpanded(true);
 			}
 		} else if (event.getEventType() == TreeItemCellEvent.MERGEWITH_NEXT) {
