@@ -167,4 +167,29 @@ public class TreeItemCellPresenterTest {
 		Assertions.assertThat(child2.getParent()).isSameAs(parent);
 		Assertions.assertThat(child2.getChildIndex()).isEqualTo(0);
 	}
+	
+	@Test
+	public void indent() {
+		Service mockedService = mock(Service.class);
+		
+		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService, null);
+		
+		child1.setParent(parent);
+		child2.setParent(parent);
+		
+		child2.indent();
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(1).containsSequence(child1);
+		
+		Assertions.assertThat(child1.getParent()).isSameAs(parent);
+		Assertions.assertThat(child1.getChildren()).hasSize(1).containsSequence(child2);
+		Assertions.assertThat(child1.getChildIndex()).isEqualTo(0);
+		
+		Assertions.assertThat(child2.getParent()).isSameAs(child1);
+		Assertions.assertThat(child2.getChildren()).isEmpty();
+		Assertions.assertThat(child2.getChildIndex()).isEqualTo(0);
+	}
 }
+

@@ -85,33 +85,9 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void userWantsToIndentItem() {
-		shortCutHelper(TreeItemCellEvent.INDENT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.ALT, KeyCode.RIGHT));
-	}
-
-	@Test
-	public void userWantsToIndentItemWithTab() {
-		shortCutHelper(TreeItemCellEvent.INDENT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.TAB));
-
-		Assertions.assertThat(view.getTxtTitle().isFocused()).isTrue();
-	}
-
-	@Test
 	public void userWantsToExpandNode() {
 		shortCutHelper(TreeItemCellEvent.TOGGLE_EXPAND, KeyCode.CONTROL,
 				KeyCode.SPACE);
-	}
-
-	@Test
-	public void userWantsToMergeItemWithPreviousItem() {
-		shortCutHelper(TreeItemCellEvent.MERGEWITH_PREVIOUS,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY)
-						.type("...").type(KeyCode.HOME)
-						.type(KeyCode.BACK_SPACE));
 	}
 
 	@Test

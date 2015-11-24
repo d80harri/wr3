@@ -141,9 +141,10 @@ public class TreeItemCellPresenter {
 		if (parent == null) {
 			parent = new SimpleObjectProperty<>(this, "parent");
 			parent.addListener((obs, o, n) -> {
-				if (n == null) {
+				if (o != null) {
 					o.getChildren().remove(this);
-				} else {
+				}
+				if (n != null) {
 					if (!n.getChildren().contains(this))
 						n.getChildren().add(this);
 				}
@@ -234,16 +235,35 @@ public class TreeItemCellPresenter {
 			}
 		}
 	}
-	
 
-	public void mergePreviousInto() {
+	public TreeItemCellPresenter getPrevious() {
+		TreeItemCellPresenter result = null;
 		TreeItemCellPresenter parent = getParent();
 		if (parent != null) {
 			int idxOfThis = parent.getChildren().indexOf(this);
 			if (idxOfThis != 0) {
-				TreeItemCellPresenter previous = getParent().getChildren().get(idxOfThis - 1);
-				previous.mergeInto(this);
+				result = getParent().getChildren().get(idxOfThis - 1);
 			}
+		}
+		return result;
+	}
+
+	public TreeItemCellPresenter getNext() {
+		TreeItemCellPresenter result = null;
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idx = parent.getChildren().indexOf(this);
+			if (idx != parent.getChildren().size()) {
+				result = parent.getChildren().get(idx + 1);
+			}
+		}
+		return result;
+	}
+
+	public void mergePreviousInto() {
+		TreeItemCellPresenter previous = getPrevious();
+		if (previous != null) {
+			previous.mergeInto(this);
 		}
 	}
 
@@ -253,14 +273,9 @@ public class TreeItemCellPresenter {
 	}
 
 	public void switchWithNext() {
-		TreeItemCellPresenter parent = getParent();
-		if (parent != null) {
-			int idx = parent.getChildren().indexOf(this);
-			if (idx != parent.getChildren().size()) {
-				TreeItemCellPresenter toSwitch = parent.getChildren().get(
-						idx + 1);
-				switchWith(toSwitch);
-			}
+		TreeItemCellPresenter next = getNext();
+		if (next != null) {
+			switchWith(next);
 		}
 	}
 
@@ -274,6 +289,12 @@ public class TreeItemCellPresenter {
 		toSwitchParent.getChildren().add(switchIdx, this);
 		toSwitch.setParent(null);
 		thisParent.getChildren().add(thisIdx, toSwitch);
+	}
+
+	public void indent() {
+		TreeItemCellPresenter previous = getPrevious();
+		if (previous != null)
+			this.setParent(previous);
 	}
 
 }

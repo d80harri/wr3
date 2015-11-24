@@ -13,9 +13,6 @@ public class TreeItemCellEvent extends Event {
 	public static final EventType<TreeItemCellEvent> BASE = new EventType<TreeItemCellEvent>(
 			"BASE");
 
-	public static final EventType<TreeItemCellEvent> INDENT = new EventType<TreeItemCellEvent>(
-			BASE, "MOVETO_CHILD_OF_PREVIOUS");
-
 	public static final EventType<TreeItemCellEvent> OUTDENT = new EventType<TreeItemCellEvent>(
 			BASE, "MOVETO_PARENT");
 

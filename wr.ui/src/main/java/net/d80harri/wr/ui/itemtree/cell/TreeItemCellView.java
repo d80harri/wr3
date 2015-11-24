@@ -118,7 +118,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				getPresenter().switchWithNext();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.RIGHT) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
+				getPresenter().indent();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.LEFT) {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT));
@@ -149,7 +149,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				getPresenter().gotoNextSibling();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.TAB) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
+				getPresenter().indent();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.BACK_SPACE) {
 				if (txtTitle.getText().isEmpty()) {
