@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import liquibase.sqlgenerator.core.GetNextChangeSetSequenceValueGenerator;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
@@ -196,23 +197,17 @@ public class TreeItemCellPresenter {
 	}
 
 	public void gotoPreviousSibling() {
-		TreeItemCellPresenter parent = getParent();
-		if (parent != null) {
-			int idxOfThis = parent.getChildren().indexOf(this);
-			if (idxOfThis != 0) {
-				parent.getChildren().get(idxOfThis - 1).setActivated(true);
-			}
+		TreeItemCellPresenter prev = getPrevious();
+		if (prev != null) {
+			prev.setActivated(true);
 		}
 	}
 
 	public void gotoNextSibling() {
-		TreeItemCellPresenter parent = getParent();
-		if (parent != null) {
-			int idxOfThis = parent.getChildren().indexOf(this);
-			if (idxOfThis != parent.getChildren().size()) {
-				this.setActivated(false);
-				parent.getChildren().get(idxOfThis + 1).setActivated(true);
-			}
+		TreeItemCellPresenter next = getNext();
+		if (next != null) {
+			this.setActivated(false);
+			next.setActivated(true);
 		}
 	}
 
@@ -225,15 +220,9 @@ public class TreeItemCellPresenter {
 	}
 
 	public void mergeNextInto() {
-		TreeItemCellPresenter parent = getParent();
-		if (parent != null) {
-			int idx = getChildIndex();
-			if (idx != parent.getChildren().size()) {
-				TreeItemCellPresenter toMerge = parent.getChildren().get(
-						idx + 1);
-				mergeInto(toMerge);
-			}
-		}
+		TreeItemCellPresenter next = getNext();
+		if (next != null)
+			mergeInto(next);
 	}
 
 	public TreeItemCellPresenter getPrevious() {
