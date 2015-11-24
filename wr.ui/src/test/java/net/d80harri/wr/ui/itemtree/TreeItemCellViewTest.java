@@ -49,32 +49,6 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void userWantsToNavigateToPrevious() {
-		shortCutHelper(TreeItemCellEvent.GOTO_PREVIOUS,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.HOME).type(KeyCode.LEFT));
-	}
-
-	@Test
-	public void userWantsToNavigateToPreviousUsingUpArrow() {
-		shortCutHelper(TreeItemCellEvent.GOTO_PREVIOUS,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY)
-						.type("...").type(KeyCode.LEFT).type(KeyCode.UP));
-	}
-
-	@Test
-	public void userWantsToNavigateToNextUsingRightArrow() {
-		shortCutHelper(TreeItemCellEvent.GOTO_NEXT, KeyCode.RIGHT);
-	}
-
-	@Test
-	public void userWantsToNavigateToNextUsingDownArrow() {
-		shortCutHelper(TreeItemCellEvent.GOTO_NEXT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY)
-						.type("...").type(KeyCode.LEFT).type(KeyCode.DOWN));
-	}
-
-	@Test
 	public void userWantsToMoveTheCursorToTheRight() {
 		shortCutHelper(null,
 				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
@@ -127,47 +101,9 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void userWantsToMoveItemDown() {
-		shortCutHelper(TreeItemCellEvent.MOVE_DOWN,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.ALT, KeyCode.DOWN));
-	}
-
-	@Test
 	public void userWantsToExpandNode() {
 		shortCutHelper(TreeItemCellEvent.TOGGLE_EXPAND, KeyCode.CONTROL,
 				KeyCode.SPACE);
-	}
-
-	@Test
-	public void userWantsToDeleteEmptyItemWithDelete() {
-		shortCutHelper(
-				TreeItemCellEvent.DELETE,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(
-						KeyCode.DELETE));
-	}
-	
-	@Test
-	public void userWantsToDeleteWithCtrD() {
-		shortCutHelper(
-				TreeItemCellEvent.DELETE,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type("...").type(
-						KeyCode.CONTROL, KeyCode.D));
-	}
-
-	@Test
-	public void userWantsToMergeItemWithNext() {
-		shortCutHelper(TreeItemCellEvent.MERGEWITH_NEXT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY)
-						.type("...").type(KeyCode.DELETE));
-	}
-
-	@Test
-	public void userWantsToDeleteEmptyItemWithBackspace() {
-		shortCutHelper(
-				TreeItemCellEvent.DELETE,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(
-						KeyCode.BACK_SPACE));
 	}
 
 	@Test

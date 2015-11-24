@@ -1,6 +1,12 @@
 package net.d80harri.wr.ui.itemtree.cell;
 
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +18,9 @@ import javafx.collections.ObservableList;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
+
+import org.fxmisc.easybind.EasyBind;
+import org.fxmisc.easybind.monadic.MonadicBinding;
 
 public class TreeItemCellPresenter {
 
@@ -60,10 +69,9 @@ public class TreeItemCellPresenter {
 							throw new UnsupportedOperationException("NYI");
 						}
 						if (c.wasAdded()) {
-							c.getAddedSubList()
-									.stream()
-									.forEach(
-											i -> i.setParent(TreeItemCellPresenter.this));
+							c.getAddedSubList().stream().forEach(i -> {
+								i.setParent(TreeItemCellPresenter.this);
+							});
 						}
 						if (c.wasRemoved()) {
 							c.getRemoved().stream()
@@ -152,6 +160,20 @@ public class TreeItemCellPresenter {
 		this.parentProperty().set(parent);
 	}
 
+	private IntegerBinding childIndex;
+
+	public final IntegerBinding childIndexProperty() {
+		if (childIndex == null) {
+			childIndex = Bindings.createIntegerBinding(() -> getParent()
+					.getChildren().indexOf(this), getParent().getChildren());
+		}
+		return this.childIndex;
+	}
+
+	public final int getChildIndex() {
+		return this.childIndexProperty().get();
+	}
+
 	// =================================================================
 	// Operations
 	// =================================================================
@@ -201,4 +223,44 @@ public class TreeItemCellPresenter {
 		}
 	}
 
+	public void mergeNextInto() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idx = getChildIndex();
+			if (idx != parent.getChildren().size()) {
+				TreeItemCellPresenter toMerge = parent.getChildren().get(
+						idx + 1);
+				mergeInto(toMerge);
+			}
+		}
+	}
+
+	public void mergeInto(TreeItemCellPresenter toMerge) {
+		this.setTitle(this.getTitle() + toMerge.getTitle());
+		toMerge.delete();
+	}
+
+	public void switchWithNext() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idx = parent.getChildren().indexOf(this);
+			if (idx != parent.getChildren().size()) {
+				TreeItemCellPresenter toSwitch = parent.getChildren().get(
+						idx + 1);
+				switchWith(toSwitch);
+			}
+		}
+	}
+
+	private void switchWith(TreeItemCellPresenter toSwitch) {
+		TreeItemCellPresenter thisParent = this.getParent();
+		int thisIdx = this.getChildIndex();
+		TreeItemCellPresenter toSwitchParent = toSwitch.getParent();
+		int switchIdx = toSwitch.getChildIndex();
+
+		this.setParent(null);
+		toSwitchParent.getChildren().add(switchIdx, this);
+		toSwitch.setParent(null);
+		thisParent.getChildren().add(thisIdx, toSwitch);
+	}
 }

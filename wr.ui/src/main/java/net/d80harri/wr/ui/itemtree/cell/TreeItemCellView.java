@@ -115,8 +115,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP));
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.DOWN) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.MOVE_DOWN));
+				getPresenter().switchWithNext();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.RIGHT) {
 				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.INDENT));
@@ -167,8 +166,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					evt.consume();
 				} else if (txtTitle.getCaretPosition() == txtTitle.getText()
 						.length()) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.MERGEWITH_NEXT));
+					getPresenter().mergeNextInto();
 					evt.consume();
 				}
 			} else if (evt.getCode() == KeyCode.LEFT) {

@@ -47,6 +47,20 @@ public class TreeItemCellPresenterTest {
 	}
 	
 	@Test
+	public void addingChildToItsOwnParent() {
+		TreeItemCellPresenter parent = new TreeItemCellPresenter();
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter();
+		TreeItemCellPresenter child2 = new TreeItemCellPresenter();
+		
+		child1.setParent(parent);
+		child2.setParent(parent);
+		
+		parent.getChildren().add(child1);
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(3).containsSequence(child1, child2, child1);
+	}
+	
+	@Test
 	public void parentToChildrenMapping() {
 		TreeItemCellPresenter parent = new TreeItemCellPresenter();
 		TreeItemCellPresenter child = new TreeItemCellPresenter();
@@ -90,5 +104,47 @@ public class TreeItemCellPresenterTest {
 		
 		Assertions.assertThat(child1.isActivated()).isFalse();
 		Assertions.assertThat(child2.isActivated()).isTrue();
+	}
+	
+	@Test
+	public void mergeWithNext() {
+		Service mockedService = mock(Service.class);
+		
+		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService, null);
+		
+		child1.setTitle("1");
+		child1.setParent(parent);
+		child2.setTitle("2");
+		child2.setParent(parent);
+		
+		child1.mergeNextInto();
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(1);
+		Assertions.assertThat(child2.getParent()).isNull();
+		Assertions.assertThat(child1.getTitle()).isEqualTo("12");
+	}
+	
+	@Test
+	public void switchWithNext() {
+		Service mockedService = mock(Service.class);
+		
+		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService, null);
+		
+		child1.setTitle("1");
+		child1.setParent(parent);
+		child2.setTitle("2");
+		child2.setParent(parent);
+		
+		child1.switchWithNext();
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(2).containsSequence(child2, child1);
+		Assertions.assertThat(child1.getParent()).isSameAs(parent);
+		Assertions.assertThat(child1.getChildIndex()).isEqualTo(1);
+		Assertions.assertThat(child2.getParent()).isSameAs(parent);
+		Assertions.assertThat(child2.getChildIndex()).isEqualTo(0);
 	}
 }

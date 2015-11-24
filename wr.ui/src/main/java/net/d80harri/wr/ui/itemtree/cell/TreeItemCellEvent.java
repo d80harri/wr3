@@ -19,14 +19,8 @@ public class TreeItemCellEvent extends Event {
 	public static final EventType<TreeItemCellEvent> MERGEWITH_PREVIOUS = new EventType<TreeItemCellEvent>(
 			BASE, "MERGEWITH_PREVIOUS");
 
-	public static final EventType<TreeItemCellEvent> MERGEWITH_NEXT = new EventType<TreeItemCellEvent>(
-			BASE, "MERGEWITH_NEXT");
-
 	public static final EventType<TreeItemCellEvent> OUTDENT = new EventType<TreeItemCellEvent>(
 			BASE, "MOVETO_PARENT");
-
-	public static final EventType<TreeItemCellEvent> MOVE_DOWN = new EventType<TreeItemCellEvent>(
-			BASE, "MOVETO_NEXT");
 
 	public static final EventType<TreeItemCellEvent> MOVE_UP = new EventType<TreeItemCellEvent>(
 			BASE, "MOVETO_PREVIOUS");
