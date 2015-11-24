@@ -156,8 +156,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					getPresenter().delete();
 					evt.consume();
 				} else if (txtTitle.getCaretPosition() == 0) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.MERGEWITH_PREVIOUS));
+					getPresenter().mergePreviousInto();
 					evt.consume();
 				}
 			} else if (evt.getCode() == KeyCode.DELETE) {

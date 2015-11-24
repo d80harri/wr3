@@ -234,6 +234,18 @@ public class TreeItemCellPresenter {
 			}
 		}
 	}
+	
+
+	public void mergePreviousInto() {
+		TreeItemCellPresenter parent = getParent();
+		if (parent != null) {
+			int idxOfThis = parent.getChildren().indexOf(this);
+			if (idxOfThis != 0) {
+				TreeItemCellPresenter previous = getParent().getChildren().get(idxOfThis - 1);
+				previous.mergeInto(this);
+			}
+		}
+	}
 
 	public void mergeInto(TreeItemCellPresenter toMerge) {
 		this.setTitle(this.getTitle() + toMerge.getTitle());
@@ -252,7 +264,7 @@ public class TreeItemCellPresenter {
 		}
 	}
 
-	private void switchWith(TreeItemCellPresenter toSwitch) {
+	public void switchWith(TreeItemCellPresenter toSwitch) {
 		TreeItemCellPresenter thisParent = this.getParent();
 		int thisIdx = this.getChildIndex();
 		TreeItemCellPresenter toSwitchParent = toSwitch.getParent();
@@ -263,4 +275,5 @@ public class TreeItemCellPresenter {
 		toSwitch.setParent(null);
 		thisParent.getChildren().add(thisIdx, toSwitch);
 	}
+
 }

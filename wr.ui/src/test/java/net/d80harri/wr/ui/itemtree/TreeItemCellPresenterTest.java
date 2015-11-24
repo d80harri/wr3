@@ -127,6 +127,26 @@ public class TreeItemCellPresenterTest {
 	}
 	
 	@Test
+	public void mergeWithPrev() {
+		Service mockedService = mock(Service.class);
+		
+		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService, null);
+		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService, null);
+		
+		child1.setTitle("1");
+		child1.setParent(parent);
+		child2.setTitle("2");
+		child2.setParent(parent);
+		
+		child2.mergePreviousInto();
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(1);
+		Assertions.assertThat(child2.getParent()).isNull();
+		Assertions.assertThat(child1.getTitle()).isEqualTo("12");
+	}
+	
+	@Test
 	public void switchWithNext() {
 		Service mockedService = mock(Service.class);
 		
