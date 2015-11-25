@@ -10,7 +10,7 @@ import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 import net.d80harri.wr.ui.core.WrUiAppContext;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class TreeItemCellPresenterTest {
 		when(mockedService.getItemsByParentId(eq(1))).thenReturn(
 				Arrays.asList(new ItemDto(), new ItemDto()));
 
-		TreeItemCellPresenter presenter = new TreeItemCellPresenter(
+		ItemCellPresenter presenter = new ItemCellPresenter(
 				mockedService, WrUiAppContext.get().getBean(
 						SpringAwareBeanMapper.class));
 		presenter.setId(1);
@@ -34,8 +34,8 @@ public class TreeItemCellPresenterTest {
 
 	@Test
 	public void childrenToParentMapping() {
-		TreeItemCellPresenter parent = new TreeItemCellPresenter();
-		TreeItemCellPresenter child = new TreeItemCellPresenter();
+		ItemCellPresenter parent = new ItemCellPresenter();
+		ItemCellPresenter child = new ItemCellPresenter();
 
 		parent.getChildren().add(child);
 
@@ -48,9 +48,9 @@ public class TreeItemCellPresenterTest {
 
 	@Test
 	public void addingChildToItsOwnParent() {
-		TreeItemCellPresenter parent = new TreeItemCellPresenter();
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter();
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter();
+		ItemCellPresenter parent = new ItemCellPresenter();
+		ItemCellPresenter child1 = new ItemCellPresenter();
+		ItemCellPresenter child2 = new ItemCellPresenter();
 
 		child1.setParent(parent);
 		child2.setParent(parent);
@@ -63,8 +63,8 @@ public class TreeItemCellPresenterTest {
 
 	@Test
 	public void parentToChildrenMapping() {
-		TreeItemCellPresenter parent = new TreeItemCellPresenter();
-		TreeItemCellPresenter child = new TreeItemCellPresenter();
+		ItemCellPresenter parent = new ItemCellPresenter();
+		ItemCellPresenter child = new ItemCellPresenter();
 
 		child.setParent(parent);
 
@@ -79,11 +79,11 @@ public class TreeItemCellPresenterTest {
 	public void gotoNextAndPrevious() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setParent(parent);
@@ -114,11 +114,11 @@ public class TreeItemCellPresenterTest {
 	public void mergeWithNext() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setTitle("1");
@@ -137,11 +137,11 @@ public class TreeItemCellPresenterTest {
 	public void mergeWithPrev() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setTitle("1");
@@ -160,11 +160,11 @@ public class TreeItemCellPresenterTest {
 	public void switchWithNext() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setTitle("1");
@@ -186,11 +186,11 @@ public class TreeItemCellPresenterTest {
 	public void switchWithPrevious() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setParent(parent);
@@ -210,11 +210,11 @@ public class TreeItemCellPresenterTest {
 	public void indent() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setParent(parent);
@@ -239,13 +239,13 @@ public class TreeItemCellPresenterTest {
 	public void outdent() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child2 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child3 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child3 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setParent(parent);
@@ -274,11 +274,11 @@ public class TreeItemCellPresenterTest {
 	public void splitItem() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child2;
+		ItemCellPresenter child2;
 
 		child1.setParent(parent);
 		child1.setTitle("1234");
@@ -302,9 +302,9 @@ public class TreeItemCellPresenterTest {
 	public void toggleExpand() {
 		Service mockedService = mock(Service.class);
 
-		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter parent = new ItemCellPresenter(mockedService,
 				null);
-		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+		ItemCellPresenter child1 = new ItemCellPresenter(mockedService,
 				null);
 
 		child1.setParent(parent);

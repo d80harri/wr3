@@ -7,8 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellEvent;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellView;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -19,15 +19,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class TreeItemCellViewTest extends GuiTest {
-	private TreeItemCellView view;
+	private ItemCellView view;
 
 	@Mock
-	private TreeItemCellPresenter presenter;
+	private ItemCellPresenter presenter;
 
 	@Override
 	protected Parent getRootNode() {
 		MockitoAnnotations.initMocks(this);
-		view = new TreeItemCellView(presenter);
+		view = new ItemCellView(presenter);
 
 		return view;
 	}

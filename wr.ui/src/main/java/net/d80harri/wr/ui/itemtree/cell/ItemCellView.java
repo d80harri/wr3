@@ -13,13 +13,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import net.d80harri.wr.ui.components.FittingHeightTextArea;
 import net.d80harri.wr.ui.core.ViewBase;
 
 import org.fxmisc.easybind.EasyBind;
 
-public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
+public class ItemCellView extends ViewBase<ItemCellPresenter> implements
 		Initializable {
 
 	@FXML
@@ -29,12 +31,13 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 	@FXML
 	private FittingHeightTextArea descriptionArea;
 
-	public TreeItemCellView(TreeItemCellPresenter presenter) {
+	public ItemCellView(ItemCellPresenter presenter) {
 		super(presenter);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		GridPane.setHgrow(txtTitle, Priority.ALWAYS);
 		txtTitle.setOnKeyPressed(this::txtTitle_KeyPressed);
 		detailPane
 				.addEventFilter(KeyEvent.KEY_PRESSED, this::detail_KeyPressed);
@@ -56,7 +59,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 						i -> i.setTitle(n)));
 	}
 
-	private void presenterChanged(TreeItemCellPresenter presenter) {
+	private void presenterChanged(ItemCellPresenter presenter) {
 		if (presenter != null) {
 			EasyBind.subscribe(presenter.titleProperty(),
 					n -> txtTitle.setText(n));

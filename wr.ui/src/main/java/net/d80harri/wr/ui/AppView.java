@@ -9,8 +9,8 @@ import javafx.fxml.Initializable;
 import net.d80harri.wr.ui.core.ViewBase;
 import net.d80harri.wr.ui.core.WrUiAppContext;
 import net.d80harri.wr.ui.itemtree.ItemTreeView;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellView;
 
 import org.fxmisc.easybind.EasyBind;
 
@@ -26,7 +26,7 @@ public class AppView extends ViewBase<AppPresenter> implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		itemTreeView.presenterProperty().bind(EasyBind.select(presenterProperty()).selectObject(i -> i.itemTreeProperty()));
-		itemTreeView.setTreeItemCellFactory(() -> new TreeItemCellView(WrUiAppContext.get().getBean(TreeItemCellPresenter.class)));
+		itemTreeView.setTreeItemCellFactory(() -> new ItemCellView(WrUiAppContext.get().getBean(ItemCellPresenter.class)));
 	}
 
 	@FXML

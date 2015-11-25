@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
 
 import org.fxmisc.easybind.EasyBind;
 
@@ -16,27 +16,27 @@ public class ItemTreePresenter {
 	private Service service;
 	private SpringAwareBeanMapper mapper;
 
-	private TreeItemCellPresenter invisibleRoot;
+	private ItemCellPresenter invisibleRoot;
 
 	public ItemTreePresenter(Service service, SpringAwareBeanMapper mapper) {
 		this.service = service;
 		this.mapper = mapper;
 	}
 
-	public TreeItemCellPresenter getInvisibleRoot() {
+	public ItemCellPresenter getInvisibleRoot() {
 		if (invisibleRoot == null) {
-			invisibleRoot = new TreeItemCellPresenter(service, mapper);
+			invisibleRoot = new ItemCellPresenter(service, mapper);
 		}
 		return invisibleRoot;
 	}
 
-	public ObservableList<TreeItemCellPresenter> getRootItems() {
+	public ObservableList<ItemCellPresenter> getRootItems() {
 		return getInvisibleRoot().getChildren();
 	}
 
-	private ObjectProperty<TreeItemCellPresenter> activeItem;
+	private ObjectProperty<ItemCellPresenter> activeItem;
 
-	public final ObjectProperty<TreeItemCellPresenter> activeItemProperty() {
+	public final ObjectProperty<ItemCellPresenter> activeItemProperty() {
 		if (activeItem == null) {
 			activeItem = new SimpleObjectProperty<>(this, "activeItem");
 
@@ -52,11 +52,11 @@ public class ItemTreePresenter {
 		return this.activeItem;
 	}
 
-	public final TreeItemCellPresenter getActiveItem() {
+	public final ItemCellPresenter getActiveItem() {
 		return this.activeItemProperty().get();
 	}
 
-	public final void setActiveItem(final TreeItemCellPresenter activeItem) {
+	public final void setActiveItem(final ItemCellPresenter activeItem) {
 		this.activeItemProperty().set(activeItem);
 	}
 
@@ -64,13 +64,13 @@ public class ItemTreePresenter {
 	// OPERATIONS
 	// ======================================================================
 
-	public void addRootNode(TreeItemCellPresenter rootNode) {
+	public void addRootNode(ItemCellPresenter rootNode) {
 		registerCellPresenter(rootNode);
 		getRootItems().add(rootNode);
 		setActiveItem(rootNode);
 	}
 
-	public void addNodeAfterActive(TreeItemCellPresenter newPresenter) {
+	public void addNodeAfterActive(ItemCellPresenter newPresenter) {
 		registerCellPresenter(newPresenter);
 
 		int indexOfActive = getRootItems().indexOf(getActiveItem());
@@ -80,14 +80,14 @@ public class ItemTreePresenter {
 	}
 
 	public void addNodeAfterActive(String title) {
-		TreeItemCellPresenter newPresenter = new TreeItemCellPresenter(service,
+		ItemCellPresenter newPresenter = new ItemCellPresenter(service,
 				mapper);
 		newPresenter.setTitle(title);
 
 		addNodeAfterActive(newPresenter);
 	}
 
-	private void registerCellPresenter(TreeItemCellPresenter presenter) {
+	private void registerCellPresenter(ItemCellPresenter presenter) {
 		EasyBind.subscribe(presenter.activatedProperty(), n -> {
 			if (n) {
 				setActiveItem(presenter);
@@ -97,8 +97,8 @@ public class ItemTreePresenter {
 
 	public void load() {
 		List<ItemDto> dtos = service.getRootItems();
-		List<TreeItemCellPresenter> presenterResult = mapper.mapAsList(dtos,
-				TreeItemCellPresenter.class);
+		List<ItemCellPresenter> presenterResult = mapper.mapAsList(dtos,
+				ItemCellPresenter.class);
 		presenterResult.stream().forEach(i -> {
 			i.setService(service);
 			i.setMapper(mapper);

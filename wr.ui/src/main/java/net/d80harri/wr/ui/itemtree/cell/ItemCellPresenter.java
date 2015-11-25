@@ -19,22 +19,22 @@ import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 
-public class TreeItemCellPresenter {
+public class ItemCellPresenter {
 
 	private Service service;
 	private SpringAwareBeanMapper mapper;
 
 	private ObjectProperty<Integer> id;
 	private StringProperty title;
-	private ObservableList<TreeItemCellPresenter> children;
-	private ObjectProperty<TreeItemCellPresenter> parent;
+	private ObservableList<ItemCellPresenter> children;
+	private ObjectProperty<ItemCellPresenter> parent;
 	private IntegerProperty titleCaretPosition;
 	private BooleanProperty expanded;
 
-	public TreeItemCellPresenter() {
+	public ItemCellPresenter() {
 	}
 
-	public TreeItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
+	public ItemCellPresenter(Service service, SpringAwareBeanMapper mapper) {
 		this.service = service;
 		this.mapper = mapper;
 	}
@@ -55,13 +55,13 @@ public class TreeItemCellPresenter {
 		this.mapper = mapper;
 	}
 
-	public ObservableList<TreeItemCellPresenter> getChildren() {
+	public ObservableList<ItemCellPresenter> getChildren() {
 		if (children == null) {
 			children = FXCollections.observableArrayList();
-			children.addListener(new ListChangeListener<TreeItemCellPresenter>() {
+			children.addListener(new ListChangeListener<ItemCellPresenter>() {
 
 				@Override
-				public void onChanged(Change<? extends TreeItemCellPresenter> c) {
+				public void onChanged(Change<? extends ItemCellPresenter> c) {
 					while (c.next()) {
 						if (c.wasPermutated() || c.wasReplaced()
 								|| c.wasUpdated()) {
@@ -69,7 +69,7 @@ public class TreeItemCellPresenter {
 						}
 						if (c.wasAdded()) {
 							c.getAddedSubList().stream().forEach(i -> {
-								i.setParent(TreeItemCellPresenter.this);
+								i.setParent(ItemCellPresenter.this);
 							});
 						}
 						if (c.wasRemoved()) {
@@ -136,7 +136,7 @@ public class TreeItemCellPresenter {
 		this.activatedProperty().set(activated);
 	}
 
-	public final ObjectProperty<TreeItemCellPresenter> parentProperty() {
+	public final ObjectProperty<ItemCellPresenter> parentProperty() {
 		if (parent == null) {
 			parent = new SimpleObjectProperty<>(this, "parent");
 			parent.addListener((obs, o, n) -> {
@@ -152,11 +152,11 @@ public class TreeItemCellPresenter {
 		return this.parent;
 	}
 
-	public final TreeItemCellPresenter getParent() {
+	public final ItemCellPresenter getParent() {
 		return this.parentProperty().get();
 	}
 
-	public final void setParent(final TreeItemCellPresenter parent) {
+	public final void setParent(final ItemCellPresenter parent) {
 		this.parentProperty().set(parent);
 	}
 
@@ -218,7 +218,7 @@ public class TreeItemCellPresenter {
 		this.getChildren().clear();
 		this.getChildren().addAll(
 				mapper.mapAsList(service.getItemsByParentId(this.getId()),
-						TreeItemCellPresenter.class));
+						ItemCellPresenter.class));
 		this.getChildren().stream().forEach(i -> {
 			i.setService(this.service);
 			i.setMapper(this.mapper);
@@ -226,14 +226,14 @@ public class TreeItemCellPresenter {
 	}
 
 	public void gotoPreviousSibling() {
-		TreeItemCellPresenter prev = getPrevious();
+		ItemCellPresenter prev = getPrevious();
 		if (prev != null) {
 			prev.setActivated(true);
 		}
 	}
 
 	public void gotoNextSibling() {
-		TreeItemCellPresenter next = getNext();
+		ItemCellPresenter next = getNext();
 		if (next != null) {
 			this.setActivated(false);
 			next.setActivated(true);
@@ -241,7 +241,7 @@ public class TreeItemCellPresenter {
 	}
 
 	public void delete() {
-		TreeItemCellPresenter parent = getParent();
+		ItemCellPresenter parent = getParent();
 		if (parent != null) {
 			this.setActivated(false);
 			parent.getChildren().remove(this);
@@ -249,14 +249,14 @@ public class TreeItemCellPresenter {
 	}
 
 	public void mergeNextInto() {
-		TreeItemCellPresenter next = getNext();
+		ItemCellPresenter next = getNext();
 		if (next != null)
 			mergeInto(next);
 	}
 
-	public TreeItemCellPresenter getPrevious() {
-		TreeItemCellPresenter result = null;
-		TreeItemCellPresenter parent = getParent();
+	public ItemCellPresenter getPrevious() {
+		ItemCellPresenter result = null;
+		ItemCellPresenter parent = getParent();
 		if (parent != null) {
 			int idxOfThis = parent.getChildren().indexOf(this);
 			if (idxOfThis != 0) {
@@ -266,9 +266,9 @@ public class TreeItemCellPresenter {
 		return result;
 	}
 
-	public TreeItemCellPresenter getNext() {
-		TreeItemCellPresenter result = null;
-		TreeItemCellPresenter parent = getParent();
+	public ItemCellPresenter getNext() {
+		ItemCellPresenter result = null;
+		ItemCellPresenter parent = getParent();
 		if (parent != null) {
 			int idx = parent.getChildren().indexOf(this);
 			if (idx != parent.getChildren().size()) {
@@ -279,35 +279,35 @@ public class TreeItemCellPresenter {
 	}
 
 	public void mergePreviousInto() {
-		TreeItemCellPresenter previous = getPrevious();
+		ItemCellPresenter previous = getPrevious();
 		if (previous != null) {
 			previous.mergeInto(this);
 		}
 	}
 
-	public void mergeInto(TreeItemCellPresenter toMerge) {
+	public void mergeInto(ItemCellPresenter toMerge) {
 		this.setTitle(this.getTitle() + toMerge.getTitle());
 		toMerge.delete();
 	}
 
 	public void switchWithNext() {
-		TreeItemCellPresenter next = getNext();
+		ItemCellPresenter next = getNext();
 		if (next != null) {
 			switchWith(next);
 		}
 	}
 
 	public void switchWithPrev() {
-		TreeItemCellPresenter prev = getPrevious();
+		ItemCellPresenter prev = getPrevious();
 		if (prev != null) {
 			switchWith(prev);
 		}
 	}
 
-	public void switchWith(TreeItemCellPresenter toSwitch) {
-		TreeItemCellPresenter thisParent = this.getParent();
+	public void switchWith(ItemCellPresenter toSwitch) {
+		ItemCellPresenter thisParent = this.getParent();
 		int thisIdx = this.getChildIndex();
-		TreeItemCellPresenter toSwitchParent = toSwitch.getParent();
+		ItemCellPresenter toSwitchParent = toSwitch.getParent();
 		int switchIdx = toSwitch.getChildIndex();
 
 		this.setParent(null);
@@ -317,28 +317,28 @@ public class TreeItemCellPresenter {
 	}
 
 	public void indent() {
-		TreeItemCellPresenter previous = getPrevious();
+		ItemCellPresenter previous = getPrevious();
 		if (previous != null)
 			this.setParent(previous);
 	}
 
 	public void outdent() {
 		if (getParent() != null) {
-			TreeItemCellPresenter grandParent = getParent().getParent();
+			ItemCellPresenter grandParent = getParent().getParent();
 			int idx = getParent().getChildIndex();
 			getParent().getChildren().remove(this);
 			grandParent.getChildren().add(idx + 1, this);
 		}
 	}
 
-	public TreeItemCellPresenter splitItem() {
-		TreeItemCellPresenter result = null;
+	public ItemCellPresenter splitItem() {
+		ItemCellPresenter result = null;
 		if (getParent() != null) {
 			int caretPosition = getTitleCaretPosition();
 			String newText = getTitle().substring(caretPosition);
 			setTitle(getTitle().substring(0, caretPosition));
 
-			result = new TreeItemCellPresenter(this.service, this.mapper);
+			result = new ItemCellPresenter(this.service, this.mapper);
 			result.setTitle(newText);
 			this.getParent().getChildren().add(getChildIndex() + 1, result);
 		}
@@ -352,7 +352,7 @@ public class TreeItemCellPresenter {
 			setActivated(true);
 		} else {
 			setExpandedProperty(true);
-			List<TreeItemCellPresenter> children = getChildren();
+			List<ItemCellPresenter> children = getChildren();
 			if (!children.isEmpty()) {
 				children.get(0).setActivated(true);
 			}

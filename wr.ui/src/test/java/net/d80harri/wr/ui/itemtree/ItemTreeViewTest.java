@@ -9,8 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import net.d80harri.wr.ui.core.WrUiAppContext;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellEvent;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellView;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -27,8 +27,8 @@ public class ItemTreeViewTest extends GuiTest {
 	@Override
 	protected Parent getRootNode() {
 		MockitoAnnotations.initMocks(this);
-		view = new ItemTreeView(presenter, () -> new TreeItemCellView(
-				WrUiAppContext.get().getBean(TreeItemCellPresenter.class)));
+		view = new ItemTreeView(presenter, () -> new ItemCellView(
+				WrUiAppContext.get().getBean(ItemCellPresenter.class)));
 
 		return view;
 	}
@@ -36,11 +36,11 @@ public class ItemTreeViewTest extends GuiTest {
 	@Test
 	public void shallCreateItemAt() {
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(0);
-		TreeItem<TreeItemCellView> newCell = computeLater(() -> view
+		TreeItem<ItemCellView> newCell = computeLater(() -> view
 				.createRootNode());
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(1);
 
-		TreeItem<TreeItemCellView> veryNewCell = computeLater(() -> view
+		TreeItem<ItemCellView> veryNewCell = computeLater(() -> view
 				.createItemAt(view.getRootNode(), 1));
 		Assertions.assertThat(view.getRootNode().getChildren()).hasSize(2)
 				.contains(newCell, veryNewCell);
@@ -50,8 +50,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallCreateWithTitle() {
-		TreeItem<TreeItemCellView> firstCell = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> firstCell = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
@@ -74,8 +74,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallFocusFirstChildWhenCellRequestsExpand() {
-		TreeItem<TreeItemCellView> childItem = computeLater(() -> {
-			TreeItem<TreeItemCellView> root = view.createRootNode();
+		TreeItem<ItemCellView> childItem = computeLater(() -> {
+			TreeItem<ItemCellView> root = view.createRootNode();
 			root.getValue().getPresenter().setTitle("MyRoot");
 			return view.createItemAt(root, 0);
 		});
@@ -103,11 +103,11 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void expandWhenNoChildrenPresent() {
-		TreeItem<TreeItemCellView> root = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+		TreeItem<ItemCellView> root = computeLater(new Supplier<TreeItem<ItemCellView>>() {
 
 			@Override
-			public TreeItem<TreeItemCellView> get() {
-				TreeItem<TreeItemCellView> root = view.createRootNode();
+			public TreeItem<ItemCellView> get() {
+				TreeItem<ItemCellView> root = view.createRootNode();
 				root.getValue().getPresenter().setTitle("MyRoot");
 				return root;
 			}
@@ -121,10 +121,10 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallNotThrowExceptionWhenExpandWithNoChildren() {
-		TreeItem<TreeItemCellView> leafItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+		TreeItem<ItemCellView> leafItem = computeLater(new Supplier<TreeItem<ItemCellView>>() {
 
 			@Override
-			public TreeItem<TreeItemCellView> get() {
+			public TreeItem<ItemCellView> get() {
 				return view.createRootNode();
 			}
 		});
@@ -137,11 +137,11 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallFocusNextSibling() {
-		TreeItem<TreeItemCellView> second = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+		TreeItem<ItemCellView> second = computeLater(new Supplier<TreeItem<ItemCellView>>() {
 
 			@Override
-			public TreeItem<TreeItemCellView> get() {
-				TreeItem<TreeItemCellView> first = view.createRootNode();
+			public TreeItem<ItemCellView> get() {
+				TreeItem<ItemCellView> first = view.createRootNode();
 				first.getValue().getPresenter().setTitle("MyRoot");
 				return view.createRootNode();
 			}
@@ -155,11 +155,11 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallFocusPreviousSibling() {
-		TreeItem<TreeItemCellView> secondItem = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+		TreeItem<ItemCellView> secondItem = computeLater(new Supplier<TreeItem<ItemCellView>>() {
 
 			@Override
-			public TreeItem<TreeItemCellView> get() {
-				TreeItem<TreeItemCellView> first = view.createRootNode();
+			public TreeItem<ItemCellView> get() {
+				TreeItem<ItemCellView> first = view.createRootNode();
 				first.getValue().getPresenter().setTitle("MyRoot");
 				return view.createRootNode();
 			}
@@ -174,10 +174,10 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallDeleteItem() {
-		TreeItem<TreeItemCellView> rootNode = computeLater(new Supplier<TreeItem<TreeItemCellView>>() {
+		TreeItem<ItemCellView> rootNode = computeLater(new Supplier<TreeItem<ItemCellView>>() {
 
 			@Override
-			public TreeItem<TreeItemCellView> get() {
+			public TreeItem<ItemCellView> get() {
 				return view.createRootNode();
 			}
 		});
@@ -190,9 +190,9 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallIndentItem() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> view
 				.createRootNode());
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> view
 				.createRootNode());
 		runLater(() -> rootNode2.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.INDENT)));
@@ -203,7 +203,7 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void indentFirstChild() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> view
 				.createRootNode());
 		runLater(() -> rootNode1.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.INDENT)));
@@ -214,13 +214,13 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallMergeWithNext() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("JKLÖ");
 			return result;
 		});
@@ -235,8 +235,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void mergeWithNextWhenNoNext() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
@@ -251,13 +251,13 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallMergeWithPrev() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("JKLÖ");
 			return result;
 		});
@@ -272,8 +272,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void mergeWithPrevWhenNoPrev() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
@@ -288,13 +288,13 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void moveDown() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("jklö");
 			return result;
 		});
@@ -307,8 +307,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void moveLastElementDown() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
@@ -322,13 +322,13 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void moveUp() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("jklö");
 			return result;
 		});
@@ -341,8 +341,8 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void moveFirstItemUp() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> {
-			TreeItem<TreeItemCellView> result = view.createRootNode();
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> {
+			TreeItem<ItemCellView> result = view.createRootNode();
 			result.getValue().getPresenter().setTitle("ASDF");
 			return result;
 		});
@@ -356,9 +356,9 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void shallOutdentItem() {
-		TreeItem<TreeItemCellView> rootNode1 = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode1 = computeLater(() -> view
 				.createRootNode());
-		TreeItem<TreeItemCellView> rootNode2 = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode2 = computeLater(() -> view
 				.createItemAt(rootNode1, 0));
 		runLater(() -> rootNode2.getValue().fireEvent(
 				new TreeItemCellEvent(TreeItemCellEvent.OUTDENT)));
@@ -397,7 +397,7 @@ public class ItemTreeViewTest extends GuiTest {
 
 	@Test
 	public void activePropertyBinding() {
-		TreeItem<TreeItemCellView> rootNode = computeLater(() -> view
+		TreeItem<ItemCellView> rootNode = computeLater(() -> view
 				.createRootNode());
 
 		runLater(() -> rootNode.getValue().getPresenter().setActivated(true));

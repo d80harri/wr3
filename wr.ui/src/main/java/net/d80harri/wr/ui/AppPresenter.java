@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
 import net.d80harri.wr.ui.itemtree.ItemTreePresenter;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
+import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
 
 
 public class AppPresenter {
@@ -39,7 +39,7 @@ public class AppPresenter {
 	}
 
 	public void createRootItem() {
-		getItemTree().addRootNode(new TreeItemCellPresenter(service, mapper));
+		getItemTree().addRootNode(new ItemCellPresenter(service, mapper));
 	}
 
 }
