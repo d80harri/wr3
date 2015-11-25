@@ -63,28 +63,6 @@ public class TreeItemCellViewTest extends GuiTest {
 	}
 
 	@Test
-	public void userWantsToOutdent() {
-		shortCutHelper(TreeItemCellEvent.OUTDENT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.ALT, KeyCode.LEFT));
-	}
-
-	@Test
-	public void userWantsToOutdentWithTab() {
-		shortCutHelper(TreeItemCellEvent.OUTDENT,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.SHIFT, KeyCode.TAB));
-		Assertions.assertThat(view.getTxtTitle().isFocused()).isTrue();
-	}
-
-	@Test
-	public void userWantsToMoveItemUp() {
-		shortCutHelper(TreeItemCellEvent.MOVE_UP,
-				() -> click(view.getTxtTitle(), MouseButton.PRIMARY).type(".")
-						.type(KeyCode.END).type(KeyCode.ALT, KeyCode.UP));
-	}
-
-	@Test
 	public void userWantsToExpandNode() {
 		shortCutHelper(TreeItemCellEvent.TOGGLE_EXPAND, KeyCode.CONTROL,
 				KeyCode.SPACE);

@@ -8,7 +8,9 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -32,6 +34,7 @@ public class TreeItemCellPresenter {
 	private StringProperty title;
 	private ObservableList<TreeItemCellPresenter> children;
 	private ObjectProperty<TreeItemCellPresenter> parent;
+	private IntegerProperty titleCaretPosition;
 
 	public TreeItemCellPresenter() {
 	}
@@ -176,6 +179,21 @@ public class TreeItemCellPresenter {
 		return this.childIndexProperty().get();
 	}
 
+	public final IntegerProperty titleCaretPositionProperty() {
+		if (titleCaretPosition == null) {
+			titleCaretPosition = new SimpleIntegerProperty(this, "titleCaretPosition");
+		}
+		return this.titleCaretPosition;
+	}
+
+	public final int getTitleCaretPosition() {
+		return this.titleCaretPositionProperty().get();
+	}
+
+	public final void setTitleCaretPosition(final int titleCaretPosition) {
+		this.titleCaretPositionProperty().set(titleCaretPosition);
+	}
+
 	// =================================================================
 	// Operations
 	// =================================================================
@@ -268,6 +286,13 @@ public class TreeItemCellPresenter {
 		}
 	}
 
+	public void switchWithPrev() {
+		TreeItemCellPresenter prev = getPrevious();
+		if (prev != null) {
+			switchWith(prev);
+		}
+	}
+
 	public void switchWith(TreeItemCellPresenter toSwitch) {
 		TreeItemCellPresenter thisParent = this.getParent();
 		int thisIdx = this.getChildIndex();
@@ -284,6 +309,30 @@ public class TreeItemCellPresenter {
 		TreeItemCellPresenter previous = getPrevious();
 		if (previous != null)
 			this.setParent(previous);
+	}
+
+	public void outdent() {
+		if (getParent() != null) {
+			TreeItemCellPresenter grandParent = getParent().getParent();
+			int idx = getParent().getChildIndex();
+			getParent().getChildren().remove(this);
+			grandParent.getChildren().add(idx + 1, this);
+		}
+	}
+
+	public TreeItemCellPresenter splitItem() {
+		TreeItemCellPresenter result = null;
+		if (getParent() != null) {
+			int caretPosition = getTitleCaretPosition();
+			String newText = getTitle().substring(caretPosition);
+			setTitle(getTitle().substring(0, caretPosition));
+
+			result = new TreeItemCellPresenter(
+					this.service, this.mapper);
+			result.setTitle(newText);
+			this.getParent().getChildren().add(getChildIndex() + 1, result);			
+		}
+		return result;
 	}
 
 }

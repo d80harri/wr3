@@ -69,6 +69,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 					getPresenter().saveOrUpdate();
 				}
 			});
+			presenter.titleCaretPositionProperty().bind(txtTitle.caretPositionProperty());
 		}
 	}
 
@@ -103,7 +104,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 			}
 		} else if (evt.isShiftDown()) {
 			if (evt.getCode() == KeyCode.TAB) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT));
+				getPresenter().outdent();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.ENTER) {
 				setDetailVisible(!isDetailVisible());
@@ -112,7 +113,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 			}
 		} else if (evt.isAltDown()) {
 			if (evt.getCode() == KeyCode.UP) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.MOVE_UP));
+				getPresenter().switchWithPrev();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.DOWN) {
 				getPresenter().switchWithNext();
@@ -121,27 +122,13 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 				getPresenter().indent();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.LEFT) {
-				this.fireEvent(new TreeItemCellEvent(TreeItemCellEvent.OUTDENT));
+				getPresenter().outdent();
 				evt.consume();
 			}
 		} else {
 			if (evt.getCode() == KeyCode.ENTER) {
-				if (txtTitle.getCaretPosition() == txtTitle.getText().length()) {
-					this.fireEvent(new TreeItemCellEvent(
-							TreeItemCellEvent.CREATE_AFTER));
-					evt.consume();
-				} else {
-					int caretPosition = getTxtTitle().getCaretPosition();
-					String newText = getTxtTitle().getText().substring(
-							caretPosition);
-					getTxtTitle().deleteText(caretPosition,
-							getTxtTitle().getLength());
-					TreeItemCellEvent cellEvent = new TreeItemCellEvent(
-							TreeItemCellEvent.CREATE_AFTER);
-					cellEvent.setTitle(newText);
-					this.fireEvent(cellEvent);
-					evt.consume();
-				}
+				getPresenter().splitItem();
+				evt.consume();
 			} else if (evt.getCode() == KeyCode.UP) {
 				getPresenter().gotoPreviousSibling();
 				evt.consume();

@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -114,15 +113,11 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 	}
 
 	private void handleTreeCellEvent(TreeItemCellEvent event) {
-		TreeItemCellView source = (TreeItemCellView) event.getSource();
 		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
 				.getSource());
 		item.getValue().getPresenter().setActivated(false);
-		int rowOfItem = itemTree.getRow(item);
 
-		if (event.getEventType() == TreeItemCellEvent.CREATE_AFTER) {
-			getPresenter().addNodeAfterActive(event.getTitle());
-		} else if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
+		if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
 			if (item.getChildren().size() > 0) {
 				boolean expanded = item.expandedProperty().get();
 				item.expandedProperty().set(!expanded);
@@ -134,19 +129,6 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 							.setActivated(true);
 				}
 			}
-		} else if (event.getEventType() == TreeItemCellEvent.MOVE_UP) {
-			int localIdx = item.getParent().getChildren().indexOf(item);
-			if (localIdx >= 1) {
-				TreeItem<TreeItemCellView> parent = item.getParent();
-				parent.getChildren().remove(item);
-				parent.getChildren().add(localIdx - 1, item);
-			}
-		} else if (event.getEventType() == TreeItemCellEvent.OUTDENT) {
-			TreeItem<TreeItemCellView> parent = item.getParent();
-			int localIdxOfParent = parent.getParent().getChildren()
-					.indexOf(parent);
-			parent.getChildren().remove(item);
-			parent.getParent().getChildren().add(localIdxOfParent + 1, item);
 		} else {
 			// nothing to do
 		}
