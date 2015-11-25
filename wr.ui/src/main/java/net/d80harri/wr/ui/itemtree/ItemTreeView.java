@@ -4,14 +4,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.d80harri.wr.ui.core.ViewBase;
-import net.d80harri.wr.ui.itemtree.cell.TreeItemCellEvent;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellPresenter;
 import net.d80harri.wr.ui.itemtree.cell.TreeItemCellView;
 
@@ -54,9 +52,6 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 		itemTree.setRoot(rootNode);
 
 		EasyBind.subscribe(presenterProperty(), this::presenterChanged);
-		rootNode.getChildren()
-				.addListener(
-						(ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
 	}
 
 	private void presenterChanged(ItemTreePresenter presenter) {
@@ -90,17 +85,15 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 				return this.children;
 			}
 		};
-		result.getChildren()
-				.addListener(
-						(ListChangeListener.Change<? extends TreeItem<TreeItemCellView>> c) -> layout());
+
+		result.expandedProperty().bindBidirectional(
+				presenter.expandedProperty());
 		return result;
 	}
 
 	private TreeItemCellView createCellViewFromPresenter(
 			TreeItemCellPresenter presenter) {
 		TreeItemCellView result = new TreeItemCellView(presenter);
-		result.addEventHandler(TreeItemCellEvent.BASE,
-				this::handleTreeCellEvent);
 		return result;
 	}
 
@@ -110,28 +103,6 @@ public class ItemTreeView extends ViewBase<ItemTreePresenter> implements
 
 	public TreeItem<TreeItemCellView> getRootNode() {
 		return rootNode;
-	}
-
-	private void handleTreeCellEvent(TreeItemCellEvent event) {
-		TreeItem<TreeItemCellView> item = findItem((TreeItemCellView) event
-				.getSource());
-		item.getValue().getPresenter().setActivated(false);
-
-		if (event.getEventType() == TreeItemCellEvent.TOGGLE_EXPAND) {
-			if (item.getChildren().size() > 0) {
-				boolean expanded = item.expandedProperty().get();
-				item.expandedProperty().set(!expanded);
-				itemTree.layout();
-				if (expanded) {
-					item.getValue().getPresenter().setActivated(true);
-				} else {
-					item.getChildren().get(0).getValue().getPresenter()
-							.setActivated(true);
-				}
-			}
-		} else {
-			// nothing to do
-		}
 	}
 
 	private TreeItem<TreeItemCellView> findItem(TreeItemCellView source) {

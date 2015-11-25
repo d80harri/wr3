@@ -1,14 +1,12 @@
 package net.d80harri.wr.ui.itemtree.cell;
 
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,13 +15,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import liquibase.sqlgenerator.core.GetNextChangeSetSequenceValueGenerator;
 import net.d80harri.wr.service.Service;
 import net.d80harri.wr.service.model.ItemDto;
 import net.d80harri.wr.service.util.SpringAwareBeanMapper;
-
-import org.fxmisc.easybind.EasyBind;
-import org.fxmisc.easybind.monadic.MonadicBinding;
 
 public class TreeItemCellPresenter {
 
@@ -35,6 +29,7 @@ public class TreeItemCellPresenter {
 	private ObservableList<TreeItemCellPresenter> children;
 	private ObjectProperty<TreeItemCellPresenter> parent;
 	private IntegerProperty titleCaretPosition;
+	private BooleanProperty expanded;
 
 	public TreeItemCellPresenter() {
 	}
@@ -181,7 +176,8 @@ public class TreeItemCellPresenter {
 
 	public final IntegerProperty titleCaretPositionProperty() {
 		if (titleCaretPosition == null) {
-			titleCaretPosition = new SimpleIntegerProperty(this, "titleCaretPosition");
+			titleCaretPosition = new SimpleIntegerProperty(this,
+					"titleCaretPosition");
 		}
 		return this.titleCaretPosition;
 	}
@@ -192,6 +188,21 @@ public class TreeItemCellPresenter {
 
 	public final void setTitleCaretPosition(final int titleCaretPosition) {
 		this.titleCaretPositionProperty().set(titleCaretPosition);
+	}
+
+	public final BooleanProperty expandedProperty() {
+		if (expanded == null) {
+			expanded = new SimpleBooleanProperty(this, "expanded");
+		}
+		return this.expanded;
+	}
+
+	public final boolean isExpanded() {
+		return this.expandedProperty().get();
+	}
+
+	public final void setExpandedProperty(final boolean expandedProperty) {
+		this.expandedProperty().set(expandedProperty);
 	}
 
 	// =================================================================
@@ -327,12 +338,25 @@ public class TreeItemCellPresenter {
 			String newText = getTitle().substring(caretPosition);
 			setTitle(getTitle().substring(0, caretPosition));
 
-			result = new TreeItemCellPresenter(
-					this.service, this.mapper);
+			result = new TreeItemCellPresenter(this.service, this.mapper);
 			result.setTitle(newText);
-			this.getParent().getChildren().add(getChildIndex() + 1, result);			
+			this.getParent().getChildren().add(getChildIndex() + 1, result);
 		}
 		return result;
+	}
+
+	public void toggleExpand() {
+		boolean expanded = isExpanded();
+		if (expanded) {
+			setExpandedProperty(false);
+			setActivated(true);
+		} else {
+			setExpandedProperty(true);
+			List<TreeItemCellPresenter> children = getChildren();
+			if (!children.isEmpty()) {
+				children.get(0).setActivated(true);
+			}
+		}
 	}
 
 }

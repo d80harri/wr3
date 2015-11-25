@@ -297,4 +297,27 @@ public class TreeItemCellPresenterTest {
 		Assertions.assertThat(child2.getChildIndex()).isEqualTo(1);
 		Assertions.assertThat(child2.getTitle()).isEqualTo("34");
 	}
+	
+	@Test
+	public void toggleExpand() {
+		Service mockedService = mock(Service.class);
+
+		TreeItemCellPresenter parent = new TreeItemCellPresenter(mockedService,
+				null);
+		TreeItemCellPresenter child1 = new TreeItemCellPresenter(mockedService,
+				null);
+
+		child1.setParent(parent);
+		
+		parent.toggleExpand();
+		
+		Assertions.assertThat(parent.getChildren()).hasSize(1).contains(child1);
+		Assertions.assertThat(parent.isExpanded()).isTrue();
+		
+		Assertions.assertThat(child1.getParent()).isSameAs(parent);
+		Assertions.assertThat(child1.getChildren()).isEmpty();
+		Assertions.assertThat(child1.getChildIndex()).isEqualTo(0);
+		Assertions.assertThat(child1.isExpanded()).isFalse();
+		Assertions.assertThat(child1.isActivated()).isTrue();
+	}
 }

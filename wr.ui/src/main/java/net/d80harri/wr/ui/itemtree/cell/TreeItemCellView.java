@@ -96,8 +96,7 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 	private void txtTitle_KeyPressed(KeyEvent evt) {
 		if (evt.isControlDown()) {
 			if (evt.getCode() == KeyCode.SPACE) {
-				this.fireEvent(new TreeItemCellEvent(
-						TreeItemCellEvent.TOGGLE_EXPAND));
+				getPresenter().toggleExpand();
 				evt.consume();
 			} else if (evt.getCode() == KeyCode.D) {
 				getPresenter().delete();
@@ -169,14 +168,6 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 		}
 	}
 
-	public Pane getDetailPane() {
-		return detailPane;
-	}
-
-	public FittingHeightTextArea getDescriptionArea() {
-		return descriptionArea;
-	}
-
 	/*
 	 * =======================================================================
 	 * == PROPERTIES ==
@@ -198,10 +189,6 @@ public class TreeItemCellView extends ViewBase<TreeItemCellPresenter> implements
 
 	public final void setDetailVisible(final boolean detailVisible) {
 		this.detailVisibleProperty().set(detailVisible);
-	}
-
-	public void appendToTitle(String title) {
-		txtTitle.appendText(title);
 	}
 
 }
