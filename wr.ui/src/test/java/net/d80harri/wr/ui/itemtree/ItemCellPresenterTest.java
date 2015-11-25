@@ -15,7 +15,7 @@ import net.d80harri.wr.ui.itemtree.cell.ItemCellPresenter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-public class TreeItemCellPresenterTest {
+public class ItemCellPresenterTest {
 
 	@Test
 	public void loadChildrenTest() {
